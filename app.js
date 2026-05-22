@@ -167,6 +167,24 @@ const soundOnIcon = soundToggle.querySelector('.icon-on');
 const soundOffIcon = soundToggle.querySelector('.icon-off');
 const soundToggleText = soundToggle.querySelector('.sound-badge-text');
 
+// Local Meme Database Cache
+let cachedMemes = null;
+
+// Load local harvested memes.json database
+async function loadMemeDatabase() {
+  try {
+    const response = await fetch('./memes.json');
+    if (response.ok) {
+      cachedMemes = await response.json();
+      console.log("Cached local meme database loaded successfully.");
+    } else {
+      console.error("Failed to load local meme database:", response.statusText);
+    }
+  } catch (e) {
+    console.error("Error loading local meme database:", e);
+  }
+}
+
 // Load Giphy API Key from either serverless function or local file
 async function loadGiphyKey() {
   // 1. Try Vercel Serverless Function proxy first
@@ -205,6 +223,7 @@ async function loadGiphyKey() {
 
 // Initialize Website
 document.addEventListener('DOMContentLoaded', () => {
+  loadMemeDatabase();
   loadGiphyKey();
   setupRotaryDialHoles();
   setupEventListeners();
@@ -504,7 +523,7 @@ function convertToEmbeddableGiphyUrl(url) {
   return url;
 }
 
-// Show selection and load meme image (dynamic Giphy fetch with local fallback)
+// Show selection and load meme image (using local harvested database)
 async function showMemeResult(index) {
   const mood = MOODS[index];
   
@@ -535,69 +554,41 @@ async function showMemeResult(index) {
   // Use a 1x1 transparent GIF to completely avoid broken image outlines/flicker
   memeImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
   
-  // 3. Attempt to fetch dynamic Giphy GIF
+  // 3. Select random GIF from local harvested database or premium curated fallbacks
   let gifUrl = '';
-  const searchTag = GIPHY_TAGS[mood.name] || `${mood.name} reaction`;
   
-  if (giphyApiKey) {
-    try {
-      const url = `https://api.giphy.com/v1/gifs/search?api_key=${giphyApiKey}&q=${encodeURIComponent(searchTag)}&limit=30&rating=g`;
-      const response = await fetch(url);
-      if (response.ok) {
-        const json = await response.json();
-        if (json && json.data && json.data.length > 0) {
-          const randomIndex = Math.floor(Math.random() * json.data.length);
-          const selectedGif = json.data[randomIndex];
-          gifUrl = selectedGif.images.downsized?.url || selectedGif.images.original?.url || '';
-        }
-      } else {
-        console.error('Giphy API error status:', response.status);
-      }
-    } catch (e) {
-      console.error('Failed to fetch from Giphy:', e);
-    }
-  }
-  
-  // 4. Secondary fallback: Attempt to fetch from free keyless Reddit Meme API if Giphy fails/rate-limited
-  if (!gifUrl) {
-    try {
-      const sub = MOOD_SUBREDDITS[mood.name] || 'memes';
-      console.log(`Giphy API rate-limited or unavailable. Trying keyless Reddit Meme API for r/${sub}...`);
-      const response = await fetch(`https://meme-api.com/gimme/${sub}/1`);
-      if (response.ok) {
-        const json = await response.json();
-        if (json && json.memes && json.memes.length > 0) {
-          gifUrl = json.memes[0].url || '';
-        }
-      }
-    } catch (e) {
-      console.error('Failed to fetch from keyless Reddit Meme API:', e);
-    }
+  if (cachedMemes && cachedMemes[mood.name] && cachedMemes[mood.name].length > 0) {
+    const list = cachedMemes[mood.name];
+    const randomIndex = Math.floor(Math.random() * list.length);
+    gifUrl = list[randomIndex];
+    console.log(`Selected random harvested GIF for "${mood.name}":`, gifUrl);
+  } else if (CURATED_GIFS[mood.name] && CURATED_GIFS[mood.name].length > 0) {
+    // Curated fallback if memes.json fails to load/is uncached
+    const list = CURATED_GIFS[mood.name];
+    const randomIndex = Math.floor(Math.random() * list.length);
+    gifUrl = list[randomIndex];
+    console.log(`memes.json not loaded. Selected curated GIF for "${mood.name}":`, gifUrl);
+  } else {
+    // Ultimate local set PNG fallback
+    gifUrl = `./memes/${mood.image}`;
+    console.log(`Using ultimate local PNG fallback for "${mood.name}":`, gifUrl);
   }
 
-  // 5. Ultimate fallback: Use our set of local premium images if both Giphy and Reddit Meme API fail/offline
-  if (!gifUrl) {
-    gifUrl = `./memes/${mood.image}`;
-    memeImage.alt = `Meme representing ${mood.name} mood (local fallback)`;
+  // Set alt text
+  if (gifUrl.includes('giphy.com')) {
+    memeImage.alt = `Giphy GIF representing ${mood.name} mood`;
+    gifUrl = convertToEmbeddableGiphyUrl(gifUrl);
   } else {
-    if (gifUrl.includes('giphy.com')) {
-      memeImage.alt = `Giphy GIF representing ${mood.name} mood: ${searchTag}`;
-      gifUrl = convertToEmbeddableGiphyUrl(gifUrl);
-    } else {
-      memeImage.alt = `Reddit meme representing ${mood.name} mood`;
-    }
+    memeImage.alt = `Meme representing ${mood.name} mood`;
   }
   
-  // 6. Load and animate image/GIF with robust CORS Blob pre-fetch to secure canvas capability
-  let loadedSuccessfully = false;
-  
-  if (gifUrl.includes('giphy.com') || gifUrl.includes('redd.it')) {
+  // 4. Load and animate image/GIF with robust CORS Blob pre-fetch to secure canvas capability
+  if (gifUrl.includes('giphy.com')) {
     try {
       const response = await fetch(gifUrl);
       if (response.ok) {
         const blob = await response.blob();
         memeImage.src = URL.createObjectURL(blob);
-        loadedSuccessfully = true;
       } else {
         console.warn("External meme fetch failed, falling back directly to local set images.");
         gifUrl = `./memes/${mood.image}`;
@@ -620,8 +611,8 @@ async function showMemeResult(index) {
   
   memeImage.onerror = () => {
     memeSpinner.style.display = 'none';
-    // If the image rendering fails, and it was a Giphy or Reddit URL, immediately load the local set image
-    if (gifUrl.includes('giphy.com') || gifUrl.includes('redd.it')) {
+    // If the image rendering fails, immediately load the local set image
+    if (gifUrl.includes('giphy.com')) {
       console.warn("External image failed loading on page, falling back to local image.");
       gifUrl = `./memes/${mood.image}`;
       memeImage.src = gifUrl;
