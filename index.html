@@ -4,10 +4,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mood Telephone — How are you feeling right now?</title>
+  <title>Moody — How are you feeling right now?</title>
   <meta name="description"
-    content="A vintage rotary telephone interactive experience. Spin the wheel to dial your mood and reveal a matching humor meme!">
+    content="Moody is a mood-based meme generator. Spin the dial, pick how you're feeling, and get a random meme that matches your vibe. Sleepy, excited, meh — we've got a meme for every mood." />
+  <meta name="keywords"
+    content="mood meme generator, random meme by mood, how are you feeling meme, meme picker, vibe check meme, funny mood tracker, meme of the day, mood based GIF" />
+  <meta property="og:title" content="Moody — Pick Your Vibe, Get Your Meme" />
+  <meta property="og:description"
+    content="Spin the mood dial and get a random meme that matches exactly how you're feeling right now." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://yourmoody.com" />
 
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Moody — Pick Your Vibe, Get Your Meme" />
+  <meta name="twitter:description"
+    content="Spin the mood dial and get a random meme that matches exactly how you're feeling right now." />
   <!-- Premium Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -104,10 +115,8 @@
 
           <div class="polaroid-media-wrapper">
             <div class="polaroid-loading-spinner" id="meme-spinner"></div>
-            <div class="polaroid-image-container">
-              <!-- Meme Image -->
-              <img id="meme-image" src="" alt="Humor meme representing your emotion" class="polaroid-img">
-            </div>
+            <!-- Meme Image -->
+            <img id="meme-image" src="" alt="Humor meme representing your emotion" class="polaroid-img">
 
             <!-- Pulse-animating vector heart charm placed at bottom-right corner of image container -->
             <div class="polaroid-heart" aria-hidden="true">

@@ -5,14 +5,14 @@
 // 1. Mood Config & Data Map (Matches the exact 10 emojis in the uploaded image)
 const MOODS = [
   { name: 'excited', emoji: '🤩', angle: 30, color: '#e09f3e', image: 'excited.png' },
-  { name: 'confident', emoji: '😎', angle: 0, color: '#2ec4b6', image: 'confident.png' },
+  { name: 'grateful', emoji: '🥹', angle: 0, color: '#d97706', image: 'confident.png' },
   { name: 'relaxed', emoji: '😌', angle: 330, color: '#b567ff', image: 'relaxed.png' },
   { name: 'okay', emoji: '🙂', angle: 300, color: '#52b788', image: 'okay.png' },
   { name: 'meh', emoji: '😑', angle: 270, color: '#94a3b8', image: 'meh.png' },
-  { name: 'sleepy', emoji: '😴', angle: 240, color: '#00b4d8', image: 'sleepy.png' },
-  { name: 'angry', emoji: '😡', angle: 210, color: '#ef4444', image: 'overstimulated.png' },
-  { name: 'suprised', emoji: '😮', angle: 180, color: '#ff85a1', image: 'suprised.png' }, // Exact filename spelling matching "suprised.png"
-  { name: 'cry', emoji: '😭', angle: 150, color: '#0284c7', image: 'melting.png' },
+  { name: 'tired', emoji: '😮‍💨', angle: 240, color: '#00b4d8', image: 'sleepy.png' },
+  { name: 'angry', emoji: '🤬', angle: 210, color: '#ef4444', image: 'overstimulated.png' },
+  { name: 'sad', emoji: '😔', angle: 180, color: '#475569', image: 'suprised.png' },
+  { name: 'anxious', emoji: '😰', angle: 150, color: '#0284c7', image: 'melting.png' },
   { name: 'having fun', emoji: '🥳', angle: 120, color: '#ff4d6d', image: 'having fun.png' }
 ];
 
@@ -31,7 +31,11 @@ const GIPHY_TAGS = {
   'having fun': 'party celebrating reaction',
   'angry': 'angry mad reaction',
   'cry': 'sad crying reaction',
-  'suprised': 'shocked gasp reaction'
+  'suprised': 'shocked gasp reaction',
+  'anxious': 'anxiety stressed reaction',
+  'sad': 'sad crying reaction',
+  'tired': 'tired exhausted reaction',
+  'grateful': 'grateful happy reaction'
 };
 
 // Premium Curated fallbacks mapping to 100% relevant and highly optimized reaction GIFs
@@ -85,6 +89,26 @@ const CURATED_GIFS = {
     'https://media.giphy.com/media/BcMJ586X2nLPy/giphy.gif',
     'https://media.giphy.com/media/3kzJvEciJa94SMW3hN/giphy.gif',
     'https://media.giphy.com/media/ebPX2g217Ic8M/giphy.gif'
+  ],
+  'anxious': [
+    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXA4ZXplMzY3bml3Z3VpbmFjYXZ5MHR3ODRyeWhnZXA5czN6b24xNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/32mC2kXYDRuxO/giphy.gif',
+    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXA4ZXplMzY3bml3Z3VpbmFjYXZ5MHR3ODRyeWhnZXA5czN6b24xNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/LRV5iWqHaVKlllczDY/giphy.gif',
+    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXA4ZXplMzY3bml3Z3VpbmFjYXZ5MHR3ODRyeWhnZXA5czN6b24xNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/xU9BHoQbLOtx4tReNz/giphy.gif'
+  ],
+  'sad': [
+    'https://media.giphy.com/media/2WxWlkKWPI2OI/giphy.gif',
+    'https://media.giphy.com/media/9PxJ1MRgYSQVOPs5qg/giphy.gif',
+    'https://media.giphy.com/media/AauJT0w8cJoSQ/giphy.gif'
+  ],
+  'tired': [
+    'https://media.giphy.com/media/d0SEaj53UXVXG/giphy.gif',
+    'https://media.giphy.com/media/1018QWki8r08c8/giphy.gif',
+    'https://media.giphy.com/media/Zg7clvqHE3yWk/giphy.gif'
+  ],
+  'grateful': [
+    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdzBwNjB2ajFmbmppMDdwcjZ0eW0wcTAybHBmaDNzdWFnbG0ybTZoYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/26vUxArWImnKV30GI/giphy.gif',
+    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdzBwNjB2ajFmbmppMDdwcjZ0eW0wcTAybHBmaDNzdWFnbG0ybTZoYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/BPjPvgQ909Q1W/giphy.gif',
+    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdzBwNjB2ajFmbmppMDdwcjZ0eW0wcTAybHBmaDNzdWFnbG0ybTZoYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l2JHZkNHxHKvoTj44/giphy.gif'
   ]
 };
 

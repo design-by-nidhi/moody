@@ -19,16 +19,16 @@
   --chrome-metal: #cccccc;
 
   /* Interactive Mood Glows */
-  --glow-confident: 0 0 30px rgba(0, 180, 216, 0.4);
-  --glow-excited: 0 0 30px rgba(255, 186, 8, 0.5);
-  --glow-having-fun: 0 0 30px rgba(247, 37, 133, 0.5);
-  --glow-meh: 0 0 30px rgba(108, 117, 125, 0.4);
-  --glow-cry: 0 0 30px rgba(2, 132, 199, 0.5);
-  --glow-okay: 0 0 30px rgba(56, 176, 0, 0.4);
+  --glow-grateful: 0 0 30px rgba(217, 119, 6, 0.5);
+  --glow-excited: 0 0 30px rgba(224, 159, 62, 0.5);
+  --glow-having-fun: 0 0 30px rgba(255, 77, 109, 0.5);
+  --glow-meh: 0 0 30px rgba(148, 163, 184, 0.4);
+  --glow-anxious: 0 0 30px rgba(2, 132, 199, 0.5);
+  --glow-okay: 0 0 30px rgba(82, 183, 136, 0.4);
   --glow-angry: 0 0 30px rgba(239, 68, 68, 0.5);
-  --glow-relaxed: 0 0 30px rgba(114, 9, 183, 0.4);
-  --glow-sleepy: 0 0 30px rgba(72, 202, 228, 0.4);
-  --glow-suprised: 0 0 30px rgba(255, 0, 110, 0.5);
+  --glow-relaxed: 0 0 30px rgba(181, 103, 255, 0.4);
+  --glow-tired: 0 0 30px rgba(0, 180, 216, 0.4);
+  --glow-sad: 0 0 30px rgba(71, 85, 105, 0.4);
 }
 
 /* Base Reset & Typography */
@@ -462,22 +462,22 @@ body {
   box-shadow: var(--glow-meh);
 }
 
-.mood-slot[data-mood="sleepy"].active-hover {
+.mood-slot[data-mood="tired"].active-hover {
   background: #caf0f8;
   border: 2.5px solid #00b4d8;
-  box-shadow: var(--glow-sleepy);
+  box-shadow: var(--glow-tired);
 }
 
-.mood-slot[data-mood="cry"].active-hover {
+.mood-slot[data-mood="anxious"].active-hover {
   background: #e0f2fe;
   border: 2.5px solid #0284c7;
-  box-shadow: var(--glow-cry);
+  box-shadow: var(--glow-anxious);
 }
 
-.mood-slot[data-mood="confident"].active-hover {
-  background: #d0f4de;
-  border: 2.5px solid #2ec4b6;
-  box-shadow: var(--glow-confident);
+.mood-slot[data-mood="grateful"].active-hover {
+  background: #fef3c7;
+  border: 2.5px solid #d97706;
+  box-shadow: var(--glow-grateful);
 }
 
 .mood-slot[data-mood="having fun"].active-hover {
@@ -492,10 +492,10 @@ body {
   box-shadow: var(--glow-excited);
 }
 
-.mood-slot[data-mood="suprised"].active-hover {
-  background: #ffe5ec;
-  border: 2.5px solid #ff85a1;
-  box-shadow: var(--glow-suprised);
+.mood-slot[data-mood="sad"].active-hover {
+  background: #f1f5f9;
+  border: 2.5px solid #475569;
+  box-shadow: var(--glow-sad);
 }
 
 .mood-slot[data-mood="angry"].active-hover {
@@ -1262,6 +1262,12 @@ body.view-dial-active .back-to-landing-btn:hover {
   position: absolute;
   transform: translate(-50%, -50%);
   transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Inactive state for unselected moods when another mood is active or dialed */
+#mood-slots-container:has(.active-hover) .mood-slot:not(.active-hover) {
+  border-color: rgba(222, 195, 207, 0.5) !important;
+  opacity: 0.5;
 }
 
 /* Custom slot icons styles */
