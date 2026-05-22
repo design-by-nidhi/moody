@@ -41,74 +41,74 @@ const GIPHY_TAGS = {
 // Premium Curated fallbacks mapping to 100% relevant and highly optimized reaction GIFs
 const CURATED_GIFS = {
   'sleepy': [
-    'https://media.giphy.com/media/d0SEaj53UXVXG/giphy.gif',
-    'https://media.giphy.com/media/1018QWki8r08c8/giphy.gif',
-    'https://media.giphy.com/media/Zg7clvqHE3yWk/giphy.gif'
+    'https://i.giphy.com/d0SEaj53UXVXG.gif',
+    'https://i.giphy.com/1018QWki8r08c8.gif',
+    'https://i.giphy.com/Zg7clvqHE3yWk.gif'
   ],
   'meh': [
-    'https://media.giphy.com/media/129OnZ9Qn2i0IE/giphy.gif',
-    'https://media.giphy.com/media/3o7TKnOqEY2giAm9Lq/giphy.gif',
-    'https://media.giphy.com/media/Fjr6v88OPk7U4/giphy.gif'
+    'https://i.giphy.com/129OnZ9Qn2i0IE.gif',
+    'https://i.giphy.com/3o7TKnOqEY2giAm9Lq.gif',
+    'https://i.giphy.com/Fjr6v88OPk7U4.gif'
   ],
   'okay': [
-    'https://media.giphy.com/media/26gJzZ426J9a1ESyc/giphy.gif',
-    'https://media.giphy.com/media/BPjPvgQ909Q1W/giphy.gif',
-    'https://media.giphy.com/media/nXxXxTo7Ut3mo/giphy.gif'
+    'https://i.giphy.com/26gJzZ426J9a1ESyc.gif',
+    'https://i.giphy.com/BPjPvgQ909Q1W.gif',
+    'https://i.giphy.com/nXxXxTo7Ut3mo.gif'
   ],
   'relaxed': [
-    'https://media.giphy.com/media/3o7TKDzH7VN5fRy1nW/giphy.gif',
-    'https://media.giphy.com/media/j6qyW5vU5HqMw/giphy.gif',
-    'https://media.giphy.com/media/o0bcZ3r1FLZTO/giphy.gif'
+    'https://i.giphy.com/3o7TKDzH7VN5fRy1nW.gif',
+    'https://i.giphy.com/j6qyW5vU5HqMw.gif',
+    'https://i.giphy.com/o0bcZ3r1FLZTO.gif'
   ],
   'confident': [
-    'https://media.giphy.com/media/3o7TKu5UZIShyEJuOk/giphy.gif',
-    'https://media.giphy.com/media/l2R013mIf1S5qp46A/giphy.gif',
-    'https://media.giphy.com/media/l1J9LXPPgLvetagdG/giphy.gif'
+    'https://i.giphy.com/3o7TKu5UZIShyEJuOk.gif',
+    'https://i.giphy.com/l2R013mIf1S5qp46A.gif',
+    'https://i.giphy.com/l1J9LXPPgLvetagdG.gif'
   ],
   'excited': [
-    'https://media.giphy.com/media/l3q2zVr6cu95nF6O4/giphy.gif',
-    'https://media.giphy.com/media/14fnGKoWg1S44U/giphy.gif',
-    'https://media.giphy.com/media/ckeHl52mNtoq87cr6a/giphy.gif'
+    'https://i.giphy.com/l3q2zVr6cu95nF6O4.gif',
+    'https://i.giphy.com/14fnGKoWg1S44U.gif',
+    'https://i.giphy.com/ckeHl52mNtoq87cr6a.gif'
   ],
   'having fun': [
-    'https://media.giphy.com/media/l3V0lsG3Js9N1a8Le/giphy.gif',
-    'https://media.giphy.com/media/ku5y1DQRCA76/giphy.gif',
-    'https://media.giphy.com/media/l2JHZkNHxHKvoTj44/giphy.gif'
+    'https://i.giphy.com/l3V0lsG3Js9N1a8Le.gif',
+    'https://i.giphy.com/ku5y1DQRCA76.gif',
+    'https://i.giphy.com/l2JHZkNHxHKvoTj44.gif'
   ],
   'angry': [
-    'https://media.giphy.com/media/11tI5s0n48AlHO/giphy.gif',
-    'https://media.giphy.com/media/ksV59coBSnh5K/giphy.gif',
-    'https://media.giphy.com/media/ntjBjvafcHqnC/giphy.gif'
+    'https://i.giphy.com/11tI5s0n48AlHO.gif',
+    'https://i.giphy.com/ksV59coBSnh5K.gif',
+    'https://i.giphy.com/ntjBjvafcHqnC.gif'
   ],
   'cry': [
-    'https://media.giphy.com/media/2WxWlkKWPI2OI/giphy.gif',
-    'https://media.giphy.com/media/9PxJ1MRgYSQVOPs5qg/giphy.gif',
-    'https://media.giphy.com/media/AauJT0w8cJoSQ/giphy.gif'
+    'https://i.giphy.com/2WxWlkKWPI2OI.gif',
+    'https://i.giphy.com/9PxJ1MRgYSQVOPs5qg.gif',
+    'https://i.giphy.com/AauJT0w8cJoSQ.gif'
   ],
   'suprised': [
-    'https://media.giphy.com/media/BcMJ586X2nLPy/giphy.gif',
-    'https://media.giphy.com/media/3kzJvEciJa94SMW3hN/giphy.gif',
-    'https://media.giphy.com/media/ebPX2g217Ic8M/giphy.gif'
+    'https://i.giphy.com/BcMJ586X2nLPy.gif',
+    'https://i.giphy.com/3kzJvEciJa94SMW3hN.gif',
+    'https://i.giphy.com/ebPX2g217Ic8M.gif'
   ],
   'anxious': [
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXA4ZXplMzY3bml3Z3VpbmFjYXZ5MHR3ODRyeWhnZXA5czN6b24xNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/32mC2kXYDRuxO/giphy.gif',
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXA4ZXplMzY3bml3Z3VpbmFjYXZ5MHR3ODRyeWhnZXA5czN6b24xNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/LRV5iWqHaVKlllczDY/giphy.gif',
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXA4ZXplMzY3bml3Z3VpbmFjYXZ5MHR3ODRyeWhnZXA5czN6b24xNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/xU9BHoQbLOtx4tReNz/giphy.gif'
+    'https://i.giphy.com/32mC2kXYDRuxO.gif',
+    'https://i.giphy.com/LRV5iWqHaVKlllczDY.gif',
+    'https://i.giphy.com/xU9BHoQbLOtx4tReNz.gif'
   ],
   'sad': [
-    'https://media.giphy.com/media/2WxWlkKWPI2OI/giphy.gif',
-    'https://media.giphy.com/media/9PxJ1MRgYSQVOPs5qg/giphy.gif',
-    'https://media.giphy.com/media/AauJT0w8cJoSQ/giphy.gif'
+    'https://i.giphy.com/2WxWlkKWPI2OI.gif',
+    'https://i.giphy.com/9PxJ1MRgYSQVOPs5qg.gif',
+    'https://i.giphy.com/AauJT0w8cJoSQ.gif'
   ],
   'tired': [
-    'https://media.giphy.com/media/d0SEaj53UXVXG/giphy.gif',
-    'https://media.giphy.com/media/1018QWki8r08c8/giphy.gif',
-    'https://media.giphy.com/media/Zg7clvqHE3yWk/giphy.gif'
+    'https://i.giphy.com/d0SEaj53UXVXG.gif',
+    'https://i.giphy.com/1018QWki8r08c8.gif',
+    'https://i.giphy.com/Zg7clvqHE3yWk.gif'
   ],
   'grateful': [
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdzBwNjB2ajFmbmppMDdwcjZ0eW0wcTAybHBmaDNzdWFnbG0ybTZoYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/26vUxArWImnKV30GI/giphy.gif',
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdzBwNjB2ajFmbmppMDdwcjZ0eW0wcTAybHBmaDNzdWFnbG0ybTZoYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/BPjPvgQ909Q1W/giphy.gif',
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdzBwNjB2ajFmbmppMDdwcjZ0eW0wcTAybHBmaDNzdWFnbG0ybTZoYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l2JHZkNHxHKvoTj44/giphy.gif'
+    'https://i.giphy.com/26vUxArWImnKV30GI.gif',
+    'https://i.giphy.com/BPjPvgQ909Q1W.gif',
+    'https://i.giphy.com/l2JHZkNHxHKvoTj44.gif'
   ]
 };
 
@@ -456,6 +456,40 @@ function navigateTo(targetView) {
   }
 }
 
+// Helper to clean/convert Giphy URLs to robust, embeddable, CORS-friendly i.giphy.com format
+function convertToEmbeddableGiphyUrl(url) {
+  if (!url || typeof url !== 'string') return url;
+  if (!url.includes('giphy.com')) return url;
+  
+  // Strip any query parameters
+  const cleanUrl = url.split('?')[0];
+  
+  // If there's /media/ in the URL
+  const mediaIndex = cleanUrl.indexOf('/media/');
+  if (mediaIndex !== -1) {
+    const afterMedia = cleanUrl.substring(mediaIndex + 7);
+    const parts = afterMedia.split('/');
+    if (parts.length >= 2) {
+      // The segment before the last one is the Giphy ID
+      const id = parts[parts.length - 2];
+      return `https://i.giphy.com/${id}.gif`;
+    } else if (parts.length === 1 && parts[0]) {
+      const id = parts[0].replace(/\.[a-zA-Z0-9]+$/, '');
+      return `https://i.giphy.com/${id}.gif`;
+    }
+  }
+  
+  // If it's already an i.giphy.com URL like https://i.giphy.com/media/ID/giphy.gif
+  if (cleanUrl.includes('i.giphy.com/')) {
+    const parts = cleanUrl.split('/');
+    const lastPart = parts[parts.length - 1];
+    const id = lastPart.replace(/\.[a-zA-Z0-9]+$/, '');
+    return `https://i.giphy.com/${id}.gif`;
+  }
+  
+  return url;
+}
+
 // Show selection and load meme image (dynamic Giphy fetch with local fallback)
 async function showMemeResult(index) {
   const mood = MOODS[index];
@@ -523,6 +557,9 @@ async function showMemeResult(index) {
   } else {
     memeImage.alt = `Giphy GIF representing ${mood.name} mood: ${searchTag}`;
   }
+
+  // Ensure Giphy URL is fully converted to robust embeddable CORS-friendly i.giphy.com format
+  gifUrl = convertToEmbeddableGiphyUrl(gifUrl);
   
   // 5. Load and animate image/GIF with robust CORS Blob pre-fetch to secure canvas capability
   try {
@@ -549,7 +586,7 @@ async function showMemeResult(index) {
     const fallbacks = CURATED_GIFS[mood.name] || [];
     const altFallback = fallbacks.find(url => url !== gifUrl) || `./memes/${mood.image}`;
     if (gifUrl !== altFallback) {
-      gifUrl = altFallback;
+      gifUrl = convertToEmbeddableGiphyUrl(altFallback);
       memeImage.src = gifUrl;
       memeImage.alt = `Meme representing ${mood.name} mood (double fallback)`;
     } else {
