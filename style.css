@@ -25,7 +25,7 @@
   --glow-meh: 0 0 30px rgba(108, 117, 125, 0.4);
   --glow-cry: 0 0 30px rgba(2, 132, 199, 0.5);
   --glow-okay: 0 0 30px rgba(56, 176, 0, 0.4);
-  --glow-overstimulated: 0 0 30px rgba(230, 57, 70, 0.5);
+  --glow-angry: 0 0 30px rgba(239, 68, 68, 0.5);
   --glow-relaxed: 0 0 30px rgba(114, 9, 183, 0.4);
   --glow-sleepy: 0 0 30px rgba(72, 202, 228, 0.4);
   --glow-suprised: 0 0 30px rgba(255, 0, 110, 0.5);
@@ -498,10 +498,10 @@ body {
   box-shadow: var(--glow-suprised);
 }
 
-.mood-slot[data-mood="overstimulated"].active-hover {
+.mood-slot[data-mood="angry"].active-hover {
   background: #fecaca;
   border: 2.5px solid #ef4444;
-  box-shadow: var(--glow-overstimulated);
+  box-shadow: var(--glow-angry);
 }
 
 .mood-slot.active-hover .slot-emoji {
@@ -1524,7 +1524,7 @@ body.view-dial-active .back-to-landing-btn:hover {
   transform: translate(-50%, -50%);
 }
 
-/* 10. Threads Squiggle (overstimulated) */
+/* 10. Threads Squiggle (angry) */
 .icon-threads {
   background: #ccff00;
   /* Neon/lime green background */

@@ -10,7 +10,7 @@ const MOODS = [
   { name: 'okay', emoji: '🙂', angle: 300, color: '#52b788', image: 'okay.png' },
   { name: 'meh', emoji: '😑', angle: 270, color: '#94a3b8', image: 'meh.png' },
   { name: 'sleepy', emoji: '😴', angle: 240, color: '#00b4d8', image: 'sleepy.png' },
-  { name: 'overstimulated', emoji: '😵‍💫', angle: 210, color: '#ef4444', image: 'overstimulated.png' },
+  { name: 'angry', emoji: '😡', angle: 210, color: '#ef4444', image: 'overstimulated.png' },
   { name: 'suprised', emoji: '😮', angle: 180, color: '#ff85a1', image: 'suprised.png' }, // Exact filename spelling matching "suprised.png"
   { name: 'cry', emoji: '😭', angle: 150, color: '#0284c7', image: 'melting.png' },
   { name: 'having fun', emoji: '🥳', angle: 120, color: '#ff4d6d', image: 'having fun.png' }
@@ -29,9 +29,63 @@ const GIPHY_TAGS = {
   'confident': 'confident cool reaction',
   'excited': 'excited happy reaction',
   'having fun': 'party celebrating reaction',
-  'overstimulated': 'stressed panic reaction',
+  'angry': 'angry mad reaction',
   'cry': 'sad crying reaction',
   'suprised': 'shocked gasp reaction'
+};
+
+// Premium Curated fallbacks mapping to 100% relevant and highly optimized reaction GIFs
+const CURATED_GIFS = {
+  'sleepy': [
+    'https://media.giphy.com/media/d0SEaj53UXVXG/giphy.gif',
+    'https://media.giphy.com/media/1018QWki8r08c8/giphy.gif',
+    'https://media.giphy.com/media/Zg7clvqHE3yWk/giphy.gif'
+  ],
+  'meh': [
+    'https://media.giphy.com/media/129OnZ9Qn2i0IE/giphy.gif',
+    'https://media.giphy.com/media/3o7TKnOqEY2giAm9Lq/giphy.gif',
+    'https://media.giphy.com/media/Fjr6v88OPk7U4/giphy.gif'
+  ],
+  'okay': [
+    'https://media.giphy.com/media/26gJzZ426J9a1ESyc/giphy.gif',
+    'https://media.giphy.com/media/BPjPvgQ909Q1W/giphy.gif',
+    'https://media.giphy.com/media/nXxXxTo7Ut3mo/giphy.gif'
+  ],
+  'relaxed': [
+    'https://media.giphy.com/media/3o7TKDzH7VN5fRy1nW/giphy.gif',
+    'https://media.giphy.com/media/j6qyW5vU5HqMw/giphy.gif',
+    'https://media.giphy.com/media/o0bcZ3r1FLZTO/giphy.gif'
+  ],
+  'confident': [
+    'https://media.giphy.com/media/3o7TKu5UZIShyEJuOk/giphy.gif',
+    'https://media.giphy.com/media/l2R013mIf1S5qp46A/giphy.gif',
+    'https://media.giphy.com/media/l1J9LXPPgLvetagdG/giphy.gif'
+  ],
+  'excited': [
+    'https://media.giphy.com/media/l3q2zVr6cu95nF6O4/giphy.gif',
+    'https://media.giphy.com/media/14fnGKoWg1S44U/giphy.gif',
+    'https://media.giphy.com/media/ckeHl52mNtoq87cr6a/giphy.gif'
+  ],
+  'having fun': [
+    'https://media.giphy.com/media/l3V0lsG3Js9N1a8Le/giphy.gif',
+    'https://media.giphy.com/media/ku5y1DQRCA76/giphy.gif',
+    'https://media.giphy.com/media/l2JHZkNHxHKvoTj44/giphy.gif'
+  ],
+  'angry': [
+    'https://media.giphy.com/media/11tI5s0n48AlHO/giphy.gif',
+    'https://media.giphy.com/media/ksV59coBSnh5K/giphy.gif',
+    'https://media.giphy.com/media/ntjBjvafcHqnC/giphy.gif'
+  ],
+  'cry': [
+    'https://media.giphy.com/media/2WxWlkKWPI2OI/giphy.gif',
+    'https://media.giphy.com/media/9PxJ1MRgYSQVOPs5qg/giphy.gif',
+    'https://media.giphy.com/media/AauJT0w8cJoSQ/giphy.gif'
+  ],
+  'suprised': [
+    'https://media.giphy.com/media/BcMJ586X2nLPy/giphy.gif',
+    'https://media.giphy.com/media/3kzJvEciJa94SMW3hN/giphy.gif',
+    'https://media.giphy.com/media/ebPX2g217Ic8M/giphy.gif'
+  ]
 };
 
 // Sound Control States
@@ -393,7 +447,7 @@ async function showMemeResult(index) {
   resultMoodName.textContent = mood.name;
   resultMoodName.style.color = mood.color;
   
-  // Set the dynamic padded mood number (e.g. MOOD #083 for index 6/Overstimulated)
+  // Set the dynamic padded mood number (e.g. MOOD #083 for index 6/Angry)
   const captionMoodNumber = document.getElementById('caption-mood-number');
   if (captionMoodNumber) {
     const serializedNumber = index + 77;
@@ -406,11 +460,12 @@ async function showMemeResult(index) {
   // 2. Clear old image and show loading spinner immediately
   memeImage.classList.remove('loaded');
   memeSpinner.style.display = 'block';
-  memeImage.src = '';
+  // Use a 1x1 transparent GIF to completely avoid broken image outlines/flicker
+  memeImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
   
   // 3. Attempt to fetch dynamic Giphy GIF
   let gifUrl = '';
-  const searchTag = GIPHY_TAGS[mood.name] || `${mood.name} meme`;
+  const searchTag = GIPHY_TAGS[mood.name] || `${mood.name} reaction`;
   
   if (giphyApiKey) {
     try {
@@ -431,10 +486,16 @@ async function showMemeResult(index) {
     }
   }
   
-  // 4. Graceful local fallback if Giphy fails or API key is not configured
+  // 4. Graceful local fallback using premium curated Giphy GIFs if Giphy fails or API key is not configured
   if (!gifUrl) {
-    gifUrl = `./memes/${mood.image}`;
-    memeImage.alt = `Meme representing ${mood.name} mood`;
+    const fallbacks = CURATED_GIFS[mood.name] || [];
+    if (fallbacks.length > 0) {
+      const randomIndex = Math.floor(Math.random() * fallbacks.length);
+      gifUrl = fallbacks[randomIndex];
+    } else {
+      gifUrl = `./memes/${mood.image}`;
+    }
+    memeImage.alt = `Meme representing ${mood.name} mood (curated fallback)`;
   } else {
     memeImage.alt = `Giphy GIF representing ${mood.name} mood: ${searchTag}`;
   }
@@ -449,11 +510,13 @@ async function showMemeResult(index) {
   
   memeImage.onerror = () => {
     memeSpinner.style.display = 'none';
-    // Double fallback to local files if dynamic GIF URL fails at image rendering
-    if (gifUrl !== `./memes/${mood.image}`) {
-      gifUrl = `./memes/${mood.image}`;
+    // Double fallback to alternative curated GIF if dynamic GIF URL fails at image rendering
+    const fallbacks = CURATED_GIFS[mood.name] || [];
+    const altFallback = fallbacks.find(url => url !== gifUrl) || `./memes/${mood.image}`;
+    if (gifUrl !== altFallback) {
+      gifUrl = altFallback;
       memeImage.src = gifUrl;
-      memeImage.alt = `Meme representing ${mood.name} mood`;
+      memeImage.alt = `Meme representing ${mood.name} mood (double fallback)`;
     } else {
       showToast(`Failed loading meme for: ${mood.name}`);
     }
