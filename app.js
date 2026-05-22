@@ -544,34 +544,38 @@ async function showMemeResult(index) {
     }
   }
   
-  // 4. Graceful local fallback using premium curated Giphy GIFs if Giphy fails or API key is not configured
+  // 4. Graceful local fallback using our set of local premium images if Giphy fails or API key is rate-limited
   if (!gifUrl) {
-    const fallbacks = CURATED_GIFS[mood.name] || [];
-    if (fallbacks.length > 0) {
-      const randomIndex = Math.floor(Math.random() * fallbacks.length);
-      gifUrl = fallbacks[randomIndex];
-    } else {
-      gifUrl = `./memes/${mood.image}`;
-    }
-    memeImage.alt = `Meme representing ${mood.name} mood (curated fallback)`;
+    gifUrl = `./memes/${mood.image}`;
+    memeImage.alt = `Meme representing ${mood.name} mood (local fallback)`;
   } else {
     memeImage.alt = `Giphy GIF representing ${mood.name} mood: ${searchTag}`;
+    // Ensure Giphy URL is fully converted to robust embeddable CORS-friendly i.giphy.com format
+    gifUrl = convertToEmbeddableGiphyUrl(gifUrl);
   }
-
-  // Ensure Giphy URL is fully converted to robust embeddable CORS-friendly i.giphy.com format
-  gifUrl = convertToEmbeddableGiphyUrl(gifUrl);
   
   // 5. Load and animate image/GIF with robust CORS Blob pre-fetch to secure canvas capability
-  try {
-    const response = await fetch(gifUrl);
-    if (response.ok) {
-      const blob = await response.blob();
-      memeImage.src = URL.createObjectURL(blob);
-    } else {
+  let loadedSuccessfully = false;
+  
+  if (gifUrl.includes('giphy.com')) {
+    try {
+      const response = await fetch(gifUrl);
+      if (response.ok) {
+        const blob = await response.blob();
+        memeImage.src = URL.createObjectURL(blob);
+        loadedSuccessfully = true;
+      } else {
+        console.warn("Giphy fetch failed, falling back directly to local set images.");
+        gifUrl = `./memes/${mood.image}`;
+        memeImage.src = gifUrl;
+      }
+    } catch (e) {
+      console.error("Failed to pre-fetch Giphy image blob, falling back directly to local set images:", e);
+      gifUrl = `./memes/${mood.image}`;
       memeImage.src = gifUrl;
     }
-  } catch (e) {
-    console.error("Failed to pre-fetch image blob due to CORS/network, using direct source:", e);
+  } else {
+    // Already using local set image
     memeImage.src = gifUrl;
   }
   
@@ -582,13 +586,12 @@ async function showMemeResult(index) {
   
   memeImage.onerror = () => {
     memeSpinner.style.display = 'none';
-    // Double fallback to alternative curated GIF if dynamic GIF URL fails at image rendering
-    const fallbacks = CURATED_GIFS[mood.name] || [];
-    const altFallback = fallbacks.find(url => url !== gifUrl) || `./memes/${mood.image}`;
-    if (gifUrl !== altFallback) {
-      gifUrl = convertToEmbeddableGiphyUrl(altFallback);
+    // If the image rendering fails, and it was a Giphy URL, immediately load the local set image
+    if (gifUrl.includes('giphy.com')) {
+      console.warn("Giphy image failed loading on page, falling back to local image.");
+      gifUrl = `./memes/${mood.image}`;
       memeImage.src = gifUrl;
-      memeImage.alt = `Meme representing ${mood.name} mood (double fallback)`;
+      memeImage.alt = `Meme representing ${mood.name} mood (local fallback)`;
     } else {
       showToast(`Failed loading meme for: ${mood.name}`);
     }
