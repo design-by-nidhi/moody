@@ -20,7 +20,7 @@ const MOODS = [
 const STOP_ANGLE = 75;
 
 // GIPHY API Configuration
-let giphyApiKey = "ncPJZIopUbyDU1R3KfSFqP2TR2shfx4L"; // High-reliability default owner key fallback
+let giphyApiKey = ""; // Loaded dynamically via loadGiphyKey()
 const GIPHY_TAGS = {
   'sleepy': 'sleepy tired reaction',
   'meh': 'bored meh reaction',

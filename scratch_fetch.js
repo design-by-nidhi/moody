@@ -17,7 +17,7 @@ const GIPHY_TAGS = {
   'grateful': 'grateful happy reaction'
 };
 
-const apiKey = "ncPJZIopUbyDU1R3KfSFqP2TR2shfx4L";
+const apiKey = process.env.NEXT_PUBLIC_GIPHY_KEY || "";
 const memesDatabase = {};
 
 async function fetchGifsForTag(tag, query) {
