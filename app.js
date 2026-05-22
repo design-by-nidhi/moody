@@ -20,18 +20,18 @@ const MOODS = [
 const STOP_ANGLE = 75;
 
 // GIPHY API Configuration
-let giphyApiKey = "";
+let giphyApiKey = "ncPJZIopUbyDU1R3KfSFqP2TR2shfx4L"; // High-reliability default owner key fallback
 const GIPHY_TAGS = {
-  'sleepy': 'sleepy tired meme',
-  'meh': 'meh bored meme',
-  'okay': 'okay fine meme',
-  'relaxed': 'relaxed chill meme',
-  'confident': 'confident cool meme',
-  'excited': 'excited happy meme',
-  'having fun': 'party fun meme',
-  'overstimulated': 'overwhelmed chaos meme',
-  'cry': 'crying sad meme',
-  'suprised': 'shocked surprised meme'
+  'sleepy': 'sleepy tired reaction',
+  'meh': 'bored meh reaction',
+  'okay': 'okay thumbs up reaction',
+  'relaxed': 'chill relaxed reaction',
+  'confident': 'confident cool reaction',
+  'excited': 'excited happy reaction',
+  'having fun': 'party celebrating reaction',
+  'overstimulated': 'stressed panic reaction',
+  'cry': 'sad crying reaction',
+  'suprised': 'shocked gasp reaction'
 };
 
 // Sound Control States
