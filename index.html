@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mood Telephone — How are you feeling right now?</title>
+  <meta name="description"
+    content="A vintage rotary telephone interactive experience. Spin the wheel to dial your mood and reveal a matching humor meme!">
+
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Outfit:wght@300;400;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="view-dial-active">
+  <!-- Interactive Ambient Background Glows -->
+  <div class="ambient-glows" aria-hidden="true">
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+  </div>
+
+  <main class="app-container">
+
+    <!-- DIALING VIEW (LANDING PAGE) -->
+    <section id="view-dial" class="view-section" style="display: flex;">
+      <div class="dial-header">
+        <h1 class="view-title">How are you feeling<br><span class="highlight">right now?</span></h1>
+        <p class="dial-instruction">Drag your emoji clockwise all the way to the finger stop and release</p>
+      </div>
+
+      <!-- Expanded Interactive Rotary Dial Container -->
+      <div class="dial-focus-scene">
+
+        <!-- Large Interactive Rotary Dial Component -->
+        <div class="rotary-dial-interactive" id="interactive-dial">
+
+          <!-- Static Background Plate (Contains Emoji/Label under holes) -->
+          <div class="dial-underlay-plate">
+            <!-- These emojis rest exactly behind the transparent holes of the rotor wheel -->
+            <div class="underlay-mood-slots" id="mood-slots-container">
+              <!-- Dynamically populated via JS to ensure perfect spacing, mapping, and accessibility -->
+            </div>
+          </div>
+
+          <!-- Rose Gold Rotating Wheel Cover -->
+          <div class="dial-wheel-interactive" id="dial-rotor">
+            <!-- Finger holes are overlaid here, translucent frosted glass circles -->
+            <div class="rotor-holes-container" id="rotor-holes-container">
+              <!-- Dynamically filled with transparent matching touch target elements -->
+            </div>
+          </div>
+
+          <!-- Sleek Rose Gold Center Cap Emblem -->
+          <div class="dial-center-glass-cap">
+            <div class="center-cap-inner">
+              <!-- Default state showing the clean solid metallic rose-gold dome -->
+              <div class="center-cap-default-state">
+                <div class="center-cap-metallic-sheen"></div>
+              </div>
+
+              <!-- Hover/Active state showing dialed/hovered emotion -->
+              <div class="center-cap-active-state" style="opacity: 0; pointer-events: none;">
+                <div class="center-emoji-display" id="dial-hover-emoji">📞</div>
+                <div class="center-text-label" id="dial-hover-label">Dial Mood</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Metallic Rose Gold Finger Stop Hook -->
+          <div class="finger-stop-chrome" id="finger-stop">
+            <div class="stop-base"></div>
+            <div class="stop-prong"></div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- MEME RESULTS VIEW -->
+    <section id="view-meme" class="view-section" style="display: none;">
+      <div class="meme-header">
+        <div class="mood-glow-badge-container" style="display: none;">
+          <div class="mood-glow-badge" id="result-badge">🙂</div>
+        </div>
+        <h2 class="result-sentiment">
+          <span class="sentiment-prefix">I am feeling</span>
+          <span id="result-mood-name" class="mood-name-colored">okay</span>
+        </h2>
+      </div>
+
+      <!-- Polaroid-like Frame Container -->
+      <div class="meme-polaroid-container">
+        <div class="polaroid-glow-shadow" id="result-card-glow"></div>
+        <div class="polaroid-card">
+          <!-- Washi Tape element placed at top-left corner -->
+          <div class="polaroid-tape"></div>
+
+          <div class="polaroid-media-wrapper">
+            <div class="polaroid-loading-spinner" id="meme-spinner"></div>
+            <!-- Meme Image -->
+            <img id="meme-image" src="" alt="Humor meme representing your emotion" class="polaroid-img">
+
+            <!-- Pulse-animating vector heart charm placed at bottom-right corner of image container -->
+            <div class="polaroid-heart" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+            </div>
+          </div>
+          <div class="polaroid-caption">
+            <span class="caption-date" id="current-date">MAY 22, 2026</span>
+            <span class="caption-app" id="caption-mood-number">MOOD #000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="result-actions">
+        <button id="btn-share" class="cta-button share-btn" aria-label="Share your mood meme">
+          <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13" />
+          </svg>
+          <span>Share Mood</span>
+        </button>
+        <button id="btn-redial" class="secondary-button redial-btn" aria-label="Dial another mood">
+          <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+          </svg>
+          <span>Dial Again</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Interactive Mechanical Sound Indicator / Toggle -->
+  <div class="sound-control-badge" id="sound-toggle" role="button" aria-label="Toggle retro mechanical sounds"
+    tabindex="0">
+    <svg class="sound-icon icon-on" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14" />
+    </svg>
+    <svg class="sound-icon icon-off" viewBox="0 0 24 24" style="display:none;" aria-hidden="true">
+      <path d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6" />
+    </svg>
+    <span class="sound-badge-text">Sounds On</span>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="toast-notification" role="status" aria-live="polite"></div>
+
+  <!-- Core Javascript Logic -->
+  <script src="app.js"></script>
+</body>
+
+</html>
