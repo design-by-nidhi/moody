@@ -1,0 +1,1633 @@
+/* ==========================================================================
+   Mood Telephone - Design System & Custom Volumetric Stylesheet
+   ========================================================================== */
+
+/* Design Tokens & Theme Variables */
+:root {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Outfit", "Inter", system-ui, sans-serif;
+
+  /* Color Palette */
+  --bg-color: #070a13;
+  --bg-gradient: radial-gradient(circle at center, #101935 0%, #060912 100%);
+  --phone-red-glossy: linear-gradient(135deg, #ff3b47 0%, #d61120 50%, #90050e 100%);
+  --phone-red-base: #d61120;
+  --phone-red-dark: #7a0007;
+  --phone-red-light: #ff6b76;
+  --chrome-gradient: linear-gradient(135deg, #ffffff 0%, #e0e0e0 25%, #999999 50%, #d6d6d6 75%, #ffffff 100%);
+  --chrome-metal: #cccccc;
+
+  /* Interactive Mood Glows */
+  --glow-confident: 0 0 30px rgba(0, 180, 216, 0.4);
+  --glow-excited: 0 0 30px rgba(255, 186, 8, 0.5);
+  --glow-having-fun: 0 0 30px rgba(247, 37, 133, 0.5);
+  --glow-meh: 0 0 30px rgba(108, 117, 125, 0.4);
+  --glow-melting: 0 0 30px rgba(255, 143, 0, 0.5);
+  --glow-okay: 0 0 30px rgba(56, 176, 0, 0.4);
+  --glow-overstimulated: 0 0 30px rgba(230, 57, 70, 0.5);
+  --glow-relaxed: 0 0 30px rgba(114, 9, 183, 0.4);
+  --glow-sleepy: 0 0 30px rgba(72, 202, 228, 0.4);
+  --glow-suprised: 0 0 30px rgba(255, 0, 110, 0.5);
+}
+
+/* Base Reset & Typography */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-color);
+  background-image: var(--bg-gradient);
+  color: #f8fafc;
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Ambient Lava Lamp Background Glows */
+.ambient-glows {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  transition: all 1.5s ease-in-out;
+}
+
+.glow-1 {
+  top: 10%;
+  left: 15%;
+  width: 450px;
+  height: 450px;
+  background-color: #ff3b47;
+  animation: float-glow 15s infinite alternate ease-in-out;
+}
+
+.glow-2 {
+  bottom: 10%;
+  right: 15%;
+  width: 500px;
+  height: 500px;
+  background-color: #00b4d8;
+  animation: float-glow 20s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes float-glow {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(50px, 30px) scale(1.1);
+  }
+
+  100% {
+    transform: translate(-30px, -50px) scale(0.9);
+  }
+}
+
+/* Container */
+.app-container {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  z-index: 10;
+  position: relative;
+}
+
+.view-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in-view 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fade-in-view {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   LANDING VIEW - Vintage Phone Scene
+   ========================================================================== */
+
+.header-container {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.main-heading {
+  font-family: var(--font-serif);
+  font-size: 3.8rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.main-heading .highlight {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--phone-red-light);
+  background: linear-gradient(to right, #ff8fa3, #ff4d6d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: 1.15rem;
+  color: #94a3b8;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+/* Volumetric Phone Photo Scene */
+.phone-photo-scene {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 3rem;
+  perspective: 1000px;
+}
+
+.phone-photo-container {
+  position: relative;
+  width: 100%;
+  border-radius: 30px;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.6),
+    0 0 50px rgba(255, 59, 71, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  background: #0f1322;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.phone-photo-container:hover {
+  transform: translateY(-8px) scale(1.01) rotate(0.5deg);
+}
+
+.phone-hero-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Landing Page Small Dial Overlay */
+.rotary-dial-small-anchor {
+  position: absolute;
+  top: 55.4%;
+  /* Matches perfectly with dial plate in vintage_red_phone.png */
+  left: 50%;
+  width: 29.5%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.01);
+  border: 2px dashed rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  view-transition-name: phone-dial-transition;
+  /* Morph transition name */
+}
+
+.rotary-dial-small-anchor:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 0 25px rgba(255, 255, 255, 0.2),
+    inset 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.dial-overlay-ripple {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  animation: ripple-pulse 2s infinite ease-in-out;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes ripple-pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: scale(1.15);
+    opacity: 0;
+  }
+}
+
+/* Call to Action Button styling */
+.cta-container {
+  display: flex;
+  justify-content: center;
+}
+
+.cta-button {
+  background: linear-gradient(135deg, #ff4d6d 0%, #c9184a 100%);
+  color: white;
+  font-family: var(--font-sans);
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 1.1rem 2.6rem;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(201, 24, 74, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  letter-spacing: 0.02em;
+}
+
+.cta-button:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 15px 30px rgba(201, 24, 74, 0.6);
+  background: linear-gradient(135deg, #ff5c7a 0%, #d81e5b 100%);
+}
+
+.cta-button:active {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(201, 24, 74, 0.4);
+}
+
+.btn-arrow {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.3s ease;
+}
+
+.cta-button:hover .btn-arrow {
+  transform: translateX(5px);
+}
+
+/* ==========================================================================
+   DIALING VIEW - Zoomed Interactive Rotary Dial
+   ========================================================================== */
+
+.dial-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.view-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.2rem, 7.5vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+}
+
+.dial-instruction {
+  color: #94a3b8;
+  font-size: 1.1rem;
+  font-weight: 300;
+}
+
+.dial-focus-scene {
+  width: 100%;
+  height: 480px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+/* The Core Rotary Dial Component - Elegant Rose Gold Metallic dialer */
+.rotary-dial-interactive {
+  position: relative;
+  width: 390px;
+  height: 390px;
+  border-radius: 50%;
+
+  /* Volumetric brushed rose gold rim with inner bevels */
+  background:
+    radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 60%),
+    conic-gradient(from 0deg,
+      #ebd6cd 0deg,
+      #dfc4b9 60deg,
+      #cca798 120deg,
+      #ebd6cd 180deg,
+      #dfc4b9 240deg,
+      #cca798 300deg,
+      #ebd6cd 360deg);
+
+  border: 12px solid #ffffff;
+  box-shadow:
+    0 25px 60px rgba(56, 26, 32, 0.25),
+    inset 0 4px 10px rgba(255, 255, 255, 0.8),
+    inset 0 -4px 10px rgba(0, 0, 0, 0.15),
+    0 0 0 8px rgba(56, 26, 32, 0.03);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  view-transition-name: phone-dial-transition;
+  /* Morph trigger */
+  touch-action: none;
+  /* Prevents scroll gestures on drag */
+}
+
+/* Static Backplate showing emojis in circles */
+.dial-underlay-plate {
+  position: absolute;
+  width: 96%;
+  height: 96%;
+  border-radius: 50%;
+  background: #fdfafb;
+  border: 2.5px solid #dfc4b9;
+  box-shadow: inset 0 6px 18px rgba(56, 26, 32, 0.08);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.underlay-mood-slots {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+/* Individual Mood Slots placed in exact rotary angular coords */
+.mood-slot {
+  position: absolute;
+  width: 62px;
+  height: 62px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #ebd3be;
+  /* Soft gold-lined trim */
+  box-shadow:
+    inset 0 3px 6px rgba(56, 26, 32, 0.06),
+    0 3px 6px rgba(56, 26, 32, 0.04);
+  z-index: 2;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mood-slot .slot-emoji {
+  font-size: 2.2rem;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Mood-specific styling details with their associated fill colors! */
+.mood-slot.active-hover {
+  transform: translate(-50%, -50%) scale(1.18);
+  box-shadow: 0 10px 25px rgba(56, 26, 32, 0.18);
+  z-index: 5;
+}
+
+.mood-slot[data-mood="relaxed"].active-hover {
+  background: #ebd3ff;
+  border: 2.5px solid #b567ff;
+  box-shadow: var(--glow-relaxed);
+}
+
+.mood-slot[data-mood="okay"].active-hover {
+  background: #d8f3dc;
+  border: 2.5px solid #52b788;
+  box-shadow: var(--glow-okay);
+}
+
+.mood-slot[data-mood="meh"].active-hover {
+  background: #e2e8f0;
+  border: 2.5px solid #94a3b8;
+  box-shadow: var(--glow-meh);
+}
+
+.mood-slot[data-mood="sleepy"].active-hover {
+  background: #caf0f8;
+  border: 2.5px solid #00b4d8;
+  box-shadow: var(--glow-sleepy);
+}
+
+.mood-slot[data-mood="melting"].active-hover {
+  background: #fef3c7;
+  border: 2.5px solid #f59e0b;
+  box-shadow: var(--glow-melting);
+}
+
+.mood-slot[data-mood="confident"].active-hover {
+  background: #d0f4de;
+  border: 2.5px solid #2ec4b6;
+  box-shadow: var(--glow-confident);
+}
+
+.mood-slot[data-mood="having fun"].active-hover {
+  background: #ffccd5;
+  border: 2.5px solid #ff4d6d;
+  box-shadow: var(--glow-having-fun);
+}
+
+.mood-slot[data-mood="excited"].active-hover {
+  background: #fff3b0;
+  border: 2.5px solid #e09f3e;
+  box-shadow: var(--glow-excited);
+}
+
+.mood-slot[data-mood="suprised"].active-hover {
+  background: #ffe5ec;
+  border: 2.5px solid #ff85a1;
+  box-shadow: var(--glow-suprised);
+}
+
+.mood-slot[data-mood="overstimulated"].active-hover {
+  background: #fecaca;
+  border: 2.5px solid #ef4444;
+  box-shadow: var(--glow-overstimulated);
+}
+
+.mood-slot.active-hover .slot-emoji {
+  transform: scale(1.18) rotate(8deg);
+}
+
+/* Polished Glass Rotary Rotor Cover with Subtle Metallic Highlights */
+.dial-wheel-interactive {
+  position: absolute;
+  width: 96%;
+  height: 96%;
+  border-radius: 50%;
+  z-index: 10;
+  cursor: grab;
+  transform: rotate(0deg);
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 80%);
+  backdrop-filter: blur(0.5px);
+  border: 2.5px solid rgba(255, 255, 255, 0.45);
+  box-shadow:
+    inset 0 0 20px rgba(255, 255, 255, 0.25),
+    0 5px 15px rgba(56, 26, 32, 0.05);
+  transition: transform 0.05s linear;
+  /* Responsive follow */
+}
+
+.dial-wheel-interactive:active {
+  cursor: grabbing;
+}
+
+/* Dragging state whirr scale */
+.dial-wheel-interactive.spinning-back {
+  transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.rotor-holes-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* The actual holes in the glass through which we click/drag */
+.finger-hole-interactive {
+  position: absolute;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.05);
+  border: 4.5px solid #dfc4b9;
+  /* Rose gold metal rim */
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0px 3px 6px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.3);
+  cursor: grab;
+  z-index: 15;
+  transition: all 0.25s ease;
+}
+
+.finger-hole-interactive:hover {
+  border-color: #cca798;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.08),
+    0px 4px 10px rgba(0, 0, 0, 0.12),
+    0 0 0 2px rgba(255, 255, 255, 0.4);
+}
+
+/* Solid Brushed Rose Gold Metal Dome Center Cap */
+.dial-center-glass-cap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 145px;
+  height: 145px;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 55%),
+    conic-gradient(from 0deg,
+      #ebd6cd 0deg,
+      #dfc4b9 60deg,
+      #cca798 120deg,
+      #ebd6cd 180deg,
+      #dfc4b9 240deg,
+      #cca798 300deg,
+      #ebd6cd 360deg);
+  border-radius: 50%;
+  box-shadow:
+    0 15px 30px rgba(56, 26, 32, 0.18),
+    inset 0 4px 6px rgba(255, 255, 255, 0.7),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 4px solid #ffffff;
+  /* Contrast white ring */
+  z-index: 25;
+}
+
+.center-cap-inner {
+  position: relative;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.center-emoji-display {
+  font-size: 2.5rem;
+  line-height: 1;
+  margin-bottom: 2px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.center-text-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #725a60;
+  letter-spacing: 0.05em;
+  max-width: 110px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.3s ease;
+}
+
+/* Metallic Brushed Rose Gold Finger Stop Prong */
+.finger-stop-chrome {
+  position: absolute;
+  bottom: 12%;
+  right: 17%;
+  width: 45px;
+  height: 60px;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.stop-base {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 25px;
+  height: 18px;
+  background: linear-gradient(135deg, #ebd6cd 0%, #dfc4b9 50%, #cca798 100%);
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(56, 26, 32, 0.25);
+}
+
+.stop-prong {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 48px;
+  background: linear-gradient(135deg, #ffffff 0%, #ebd6cd 25%, #dfc4b9 60%, #cca798 100%);
+  border-radius: 3px 15px 3px 3px;
+  box-shadow: 2px 2px 6px rgba(56, 26, 32, 0.15);
+  transform: rotate(-10deg);
+  clip-path: polygon(0 0, 100% 10%, 100% 90%, 0% 100%);
+}
+
+/* ==========================================================================
+   MEME VIEW - Polaroid & Results Card
+   ========================================================================== */
+
+.meme-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.mood-glow-badge-container {
+  display: none;
+  /* Hide circular emoji badge as requested */
+}
+
+.result-sentiment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.sentiment-prefix {
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: #381a20;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.mood-name-colored {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 8.5vw, 3.6rem);
+  font-weight: 800;
+  font-style: italic;
+  color: #775666 !important;
+  /* Force the beautiful #775666 mauve theme color */
+  text-transform: capitalize;
+  line-height: 1.1;
+  margin-top: 4px;
+}
+
+/* Volumetric Polaroid Frame container */
+.meme-polaroid-container {
+  position: relative;
+  width: 360px;
+  margin-bottom: 2.5rem;
+  transform: rotate(-1.5deg);
+  transition: transform 0.3s ease;
+}
+
+.meme-polaroid-container:hover {
+  transform: rotate(0.5deg) scale(1.02);
+}
+
+.polaroid-glow-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  filter: blur(20px);
+  opacity: 0.12;
+  background: #381a20 !important;
+  /* Soft warm glow instead of neon glow */
+  box-shadow: 0 20px 40px rgba(56, 26, 32, 0.12) !important;
+  z-index: 1;
+}
+
+.polaroid-tape {
+  position: absolute;
+  top: -15px;
+  left: -20px;
+  width: 95px;
+  height: 32px;
+  background-color: rgba(243, 168, 162, 0.75);
+  /* Elegant warm washi tape */
+  backdrop-filter: blur(1px);
+  transform: rotate(-12deg);
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(56, 26, 32, 0.05);
+  /* Jagged torn edges on left and right */
+  clip-path: polygon(0% 0%, 5% 8%, 0% 16%, 6% 25%, 0% 33%, 5% 41%, 0% 50%, 6% 58%, 0% 66%, 5% 75%, 0% 83%, 6% 91%, 0% 100%,
+      100% 100%, 95% 91%, 100% 83%, 94% 75%, 100% 66%, 95% 58%, 100% 50%, 94% 41%, 100% 33%, 95% 25%, 100% 16%, 94% 8%, 100% 0%);
+}
+
+.polaroid-card {
+  position: relative;
+  width: 100%;
+  background: #fffdfb;
+  /* Off-white card frame */
+  padding: 16px 16px 28px 16px;
+  border-radius: 2px;
+  box-shadow:
+    0 15px 35px rgba(56, 26, 32, 0.12),
+    0 5px 12px rgba(56, 26, 32, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(56, 26, 32, 0.05);
+}
+
+.polaroid-media-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  background: #faf6f5;
+  /* Muted warm background */
+  border: 1.5px solid rgba(56, 26, 32, 0.06);
+  box-shadow: inset 0 2px 8px rgba(56, 26, 32, 0.04);
+  overflow: visible;
+  /* Let heart overflow slightly */
+}
+
+.polaroid-heart {
+  position: absolute;
+  bottom: -15px;
+  right: -12px;
+  width: 44px;
+  height: 44px;
+  z-index: 10;
+  filter: drop-shadow(0 3px 5px rgba(56, 26, 32, 0.12));
+  animation: heart-pulse 2s infinite ease-in-out;
+  pointer-events: none;
+}
+
+.polaroid-heart svg {
+  width: 100%;
+  height: 100%;
+  fill: #f48c96;
+  /* Warm pink heart charm */
+}
+
+@keyframes heart-pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.polaroid-loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 3.5px solid rgba(56, 26, 32, 0.05);
+  border-top-color: #775666;
+  border-radius: 50%;
+  animation: spinner-spin 0.8s linear infinite;
+  z-index: 2;
+}
+
+@keyframes spinner-spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.polaroid-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 3;
+  position: relative;
+  border: 1px solid rgba(56, 26, 32, 0.03);
+}
+
+.polaroid-img.loaded {
+  opacity: 1;
+}
+
+.polaroid-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  font-family: var(--font-sans);
+  color: #381a20;
+  font-weight: 700;
+}
+
+.caption-date {
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  font-weight: 700;
+}
+
+.caption-app {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  /* Larger, matching the date for premium style */
+  text-transform: uppercase;
+  color: #381a20;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Action Controls */
+.result-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.action-icon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.secondary-button {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 1.1rem 2.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.secondary-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: white;
+  transform: translateY(-2px);
+}
+
+.secondary-button:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   Sound Control & Notifications
+   ========================================================================== */
+
+.sound-control-badge {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #94a3b8;
+  padding: 10px 16px;
+  border-radius: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 100;
+  transition: all 0.3s ease;
+  user-select: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.sound-control-badge:hover {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.sound-icon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.toast-notification {
+  position: fixed;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+}
+
+.toast-notification.show {
+  bottom: 30px;
+}
+
+/* ==========================================================================
+   VIEW TRANSITION Morphing Styles
+   ========================================================================== */
+
+/* Define the morph groups */
+::view-transition-old(phone-dial-transition),
+::view-transition-new(phone-dial-transition) {
+  /* Maintain ratio */
+  height: 100%;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Responsive Breakpoints & Adjustments */
+
+/* Tablets / iPad Breakpoint */
+@media (max-width: 900px) {
+  .rotary-dial-interactive {
+    width: 350px;
+    height: 350px;
+    border-width: 10px;
+  }
+
+  .mood-slot {
+    width: 56px !important;
+    height: 56px !important;
+  }
+
+  .mood-slot .slot-emoji {
+    font-size: 1.8rem;
+  }
+
+  .finger-hole-interactive {
+    width: 60px !important;
+    height: 60px !important;
+    border-width: 3.5px;
+  }
+
+  .dial-center-glass-cap {
+    width: 125px;
+    height: 125px;
+    border-width: 3.5px;
+  }
+
+  .center-emoji-display {
+    font-size: 2.1rem;
+  }
+
+  .finger-stop-chrome {
+    width: 40px;
+    height: 52px;
+    bottom: 11%;
+    right: 16%;
+  }
+
+  .stop-prong {
+    height: 42px;
+    width: 24px;
+  }
+
+  .meme-polaroid-container {
+    width: 330px;
+  }
+}
+
+/* Mobile Phones Breakpoint */
+@media (max-width: 500px) {
+  .app-container {
+    padding: 1rem;
+  }
+
+  .rotary-dial-interactive {
+    width: 290px;
+    height: 290px;
+    border-width: 8px;
+    box-shadow:
+      0 15px 40px rgba(56, 26, 32, 0.2),
+      inset 0 3px 8px rgba(255, 255, 255, 0.8),
+      inset 0 -3px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .mood-slot {
+    width: 46px !important;
+    height: 46px !important;
+  }
+
+  .mood-slot .slot-emoji {
+    font-size: 1.5rem;
+  }
+
+  .finger-hole-interactive {
+    width: 50px !important;
+    height: 50px !important;
+    border-width: 3px;
+  }
+
+  .dial-center-glass-cap {
+    width: 105px;
+    height: 105px;
+    border-width: 3px;
+  }
+
+  .center-emoji-display {
+    font-size: 1.8rem;
+  }
+
+  .finger-stop-chrome {
+    width: 34px;
+    height: 45px;
+    bottom: 11%;
+    right: 15%;
+  }
+
+  .stop-base {
+    width: 20px;
+    height: 14px;
+  }
+
+  .stop-prong {
+    height: 36px;
+    width: 20px;
+  }
+
+  .meme-polaroid-container {
+    width: 280px;
+  }
+
+  .polaroid-card {
+    padding: 12px 12px 20px 12px;
+  }
+
+  .polaroid-caption {
+    margin-top: 14px;
+  }
+
+  .caption-date {
+    font-size: 0.95rem;
+  }
+
+  .caption-app {
+    font-size: 0.85rem;
+  }
+
+  .polaroid-tape {
+    width: 80px;
+    height: 28px;
+    top: -12px;
+    left: -15px;
+  }
+
+  .polaroid-heart {
+    width: 36px;
+    height: 36px;
+    bottom: -12px;
+    right: -10px;
+  }
+
+  .result-actions {
+    flex-direction: column;
+    width: 280px;
+    gap: 12px;
+  }
+
+  .result-actions button {
+    width: 100%;
+    justify-content: center;
+    padding: 0.95rem 2rem;
+  }
+}
+
+/* ==========================================================================
+   OFF-WHITE PREMIUM ROTARY THEME & ANNOTATIONS (Matches right image exactly)
+   ========================================================================== */
+
+/* Active off-white layout in Dial and Meme screens */
+body.view-dial-active,
+body.view-meme-active {
+  background-color: #faf8f6;
+  background-image: radial-gradient(circle at center, #ffffff 0%, #f5ecef 100%);
+  color: #381a20;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.view-dial-active .view-title {
+  color: #775666;
+  font-family: var(--font-serif);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+body.view-dial-active .view-title .highlight {
+  color: #775666;
+  font-style: italic;
+  font-weight: 700;
+}
+
+body.view-dial-active .dial-instruction,
+body.view-meme-active .dial-instruction {
+  color: #725a60;
+  font-weight: 400;
+}
+
+body.view-dial-active .back-to-landing-btn {
+  border-color: rgba(56, 26, 32, 0.15);
+  color: #725a60;
+}
+
+body.view-dial-active .back-to-landing-btn:hover {
+  border-color: #ff3b47;
+  color: #ff3b47;
+  background: rgba(255, 59, 71, 0.05);
+}
+
+/* Sparks/pencil doodles on top-right and bottom-left of Dialing scene */
+.dial-focus-scene {
+  position: relative;
+}
+
+.dial-focus-scene::before,
+.dial-focus-scene::after {
+  content: '';
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 0.5s ease;
+}
+
+/* Top-right sparks (three radiating lines) */
+.dial-focus-scene::before {
+  top: 6%;
+  right: 18%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%23381a20' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M4 20L10 14M12 22V15M20 20L14 14'/%3E%3C/svg%3E");
+  transform: rotate(10deg);
+}
+
+/* Bottom-left sparks (three radiating lines) */
+.dial-focus-scene::after {
+  bottom: 6%;
+  left: 18%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%23381a20' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M20 4L14 10M12 2v7M4 4l6 6'/%3E%3C/svg%3E");
+  transform: rotate(10deg);
+}
+
+/* Center Cap Default/Active States Fading */
+.center-cap-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.center-cap-default-state,
+.center-cap-active-state {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.center-text-label-main {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #381a20;
+  text-align: center;
+  margin-top: 2px;
+}
+
+/* Premium custom style overlays for icons inside the 10 finger holes */
+.mood-slot {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1.8px solid #dec3cf !important;
+  /* Rose gold bezel */
+  box-shadow:
+    inset 0 3px 6px rgba(0, 0, 0, 0.06),
+    0 4px 8px rgba(0, 0, 0, 0.04) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Custom slot icons styles */
+.custom-icon {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 1. Coffee cup (relaxed) */
+.icon-coffee {
+  background: #ffffff;
+}
+
+.coffee-cup {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2.2px solid #dcd1cc;
+  background: #d8c2b7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.coffee-cup::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 7px;
+  height: 12px;
+  border: 2.2px solid #dcd1cc;
+  border-left: none;
+  border-radius: 0 6px 6px 0;
+}
+
+.coffee-latte {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff1eb 0%, #c39b84 70%, #9c6c54 100%);
+  position: relative;
+}
+
+.coffee-latte::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 9px;
+  border-radius: 50%;
+  border-top: 1.8px solid rgba(255, 255, 255, 0.75);
+  transform: rotate(-25deg);
+  top: 5px;
+  left: 4px;
+}
+
+/* 2. VJ (okay) */
+.icon-vj {
+  font-family: var(--font-sans);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: -0.04em;
+  background: #ffffff;
+}
+
+/* 3. Double Stars (meh) */
+.icon-stars {
+  color: #0f172a;
+  background: #ffffff;
+}
+
+.icon-stars svg {
+  width: 32px;
+  height: 32px;
+}
+
+/* 4. Sailboat (sleepy) */
+.icon-sailboat {
+  color: #1e293b;
+  background: #ffffff;
+}
+
+.icon-sailboat svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* 5. ChatGPT (melting) */
+.icon-chatgpt {
+  color: #000000;
+  background: #ffffff;
+}
+
+.icon-chatgpt svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* 6. Ai (Adobe Illustrator) - brown circle, gold letters (confident) */
+.icon-ai {
+  background: #26130c;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: #fca311;
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 900;
+  border: 2.8px solid #fca311;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* 7. Retro Camera (having fun) */
+.icon-camera {
+  background: #ffffff;
+  color: #7f8c8d;
+}
+
+.icon-camera svg {
+  width: 28px;
+  height: 28px;
+}
+
+.camera-charm {
+  position: absolute;
+  bottom: 8px;
+  left: 6px;
+  width: 5px;
+  height: 5px;
+  background: #ff4d6d;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.camera-charm::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 2px;
+  width: 1px;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* 8. Vintage Pink Pager (excited) */
+.icon-pager {
+  background: #ffffff;
+}
+
+.pager-body {
+  width: 20px;
+  height: 30px;
+  background: #f7aab5;
+  border: 1.5px solid #d4808d;
+  border-radius: 3px;
+  position: relative;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.pager-body::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 4px;
+  width: 2.5px;
+  height: 2.5px;
+  background: #d4808d;
+  border-radius: 50%;
+}
+
+.pager-screen {
+  width: 13px;
+  height: 8px;
+  background: #edf5f0;
+  border: 0.8px solid #b5ccbe;
+  border-radius: 1px;
+  margin: 3px auto 2px auto;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.pager-buttons {
+  width: 13px;
+  height: 10px;
+  margin: 0 auto;
+  background: radial-gradient(circle, #ffffff 20%, transparent 20%),
+    radial-gradient(circle, #ffffff 20%, transparent 20%),
+    radial-gradient(circle, #ffffff 20%, transparent 20%);
+  background-size: 3.5px 3.5px;
+  background-position: 1px 1px, 5px 1px, 9px 1px,
+    1px 5px, 5px 5px, 9px 5px;
+  background-repeat: no-repeat;
+}
+
+.pager-charm {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  width: 4px;
+  height: 4px;
+  background: #ff4d6d;
+  border-radius: 50%;
+}
+
+.pager-charm::after {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 1.5px;
+  width: 0.8px;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* 9. Passport (suprised) */
+.icon-passport {
+  background: #ffffff;
+}
+
+.passport-cover {
+  width: 24px;
+  height: 33px;
+  background: #9d1c24;
+  border-radius: 2px;
+  border: 1.2px solid #751218;
+  transform: rotate(-10deg);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.passport-gold-globe {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 0.8px solid #ebd39c;
+  position: relative;
+}
+
+.passport-gold-globe::after {
+  content: '✈';
+  font-size: 7px;
+  color: #ebd39c;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 10. Threads Squiggle (overstimulated) */
+.icon-threads {
+  background: #ccff00;
+  /* Neon/lime green background */
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  color: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.icon-threads svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* ==========================================================================
+   RESULTS VIEW BUTTONS, SOUND BADGE, TOAST OVERRIDES FOR PREMIUM THEME
+   ========================================================================== */
+
+/* Mauve primary Share Mood CTA button styled in unified theme */
+body.view-meme-active .cta-button {
+  background: linear-gradient(135deg, #775666 0%, #5c3f4e 100%);
+  box-shadow: 0 10px 25px rgba(119, 86, 102, 0.25), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+body.view-meme-active .cta-button:hover {
+  background: linear-gradient(135deg, #8c687b 0%, #6e4e5f 100%);
+  box-shadow: 0 15px 30px rgba(119, 86, 102, 0.35);
+  transform: translateY(-4px) scale(1.03);
+}
+
+body.view-meme-active .cta-button:active {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(119, 86, 102, 0.25);
+}
+
+/* Secondary Redial button styled in matching rose-gold */
+body.view-meme-active .secondary-button {
+  background: transparent;
+  color: #381a20;
+  border: 2px solid #dfc4b9;
+  box-shadow: 0 4px 10px rgba(56, 26, 32, 0.04);
+}
+
+body.view-meme-active .secondary-button:hover {
+  background: rgba(223, 196, 185, 0.15);
+  border-color: #cca798;
+  color: #381a20;
+  transform: translateY(-2px);
+}
+
+body.view-meme-active .secondary-button:active {
+  transform: translateY(0);
+}
+
+/* Premium styled retro mechanical sound control toggle badge */
+body.view-dial-active .sound-control-badge,
+body.view-meme-active .sound-control-badge {
+  background: rgba(255, 253, 252, 0.85);
+  border: 1.5px solid #dfc4b9;
+  color: #725a60;
+  box-shadow: 0 4px 15px rgba(56, 26, 32, 0.08);
+}
+
+body.view-dial-active .sound-control-badge:hover,
+body.view-meme-active .sound-control-badge:hover {
+  color: #381a20;
+  border-color: #cca798;
+  background: #ffffff;
+  box-shadow: 0 6px 20px rgba(56, 26, 32, 0.12);
+}
+
+/* Cohesive warm toast notification */
+body.view-dial-active .toast-notification,
+body.view-meme-active .toast-notification {
+  background: rgba(56, 26, 32, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  box-shadow: 0 10px 30px rgba(56, 26, 32, 0.2);
+}
