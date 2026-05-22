@@ -23,7 +23,7 @@
   --glow-excited: 0 0 30px rgba(255, 186, 8, 0.5);
   --glow-having-fun: 0 0 30px rgba(247, 37, 133, 0.5);
   --glow-meh: 0 0 30px rgba(108, 117, 125, 0.4);
-  --glow-melting: 0 0 30px rgba(255, 143, 0, 0.5);
+  --glow-cry: 0 0 30px rgba(2, 132, 199, 0.5);
   --glow-okay: 0 0 30px rgba(56, 176, 0, 0.4);
   --glow-overstimulated: 0 0 30px rgba(230, 57, 70, 0.5);
   --glow-relaxed: 0 0 30px rgba(114, 9, 183, 0.4);
@@ -468,10 +468,10 @@ body {
   box-shadow: var(--glow-sleepy);
 }
 
-.mood-slot[data-mood="melting"].active-hover {
-  background: #fef3c7;
-  border: 2.5px solid #f59e0b;
-  box-shadow: var(--glow-melting);
+.mood-slot[data-mood="cry"].active-hover {
+  background: #e0f2fe;
+  border: 2.5px solid #0284c7;
+  box-shadow: var(--glow-cry);
 }
 
 .mood-slot[data-mood="confident"].active-hover {
@@ -845,7 +845,9 @@ body {
   opacity: 0;
   transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 3;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   border: 1px solid rgba(56, 26, 32, 0.03);
 }
 

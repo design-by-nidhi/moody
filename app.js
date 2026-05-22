@@ -12,7 +12,7 @@ const MOODS = [
   { name: 'sleepy', emoji: '😴', angle: 240, color: '#00b4d8', image: 'sleepy.png' },
   { name: 'overstimulated', emoji: '😵‍💫', angle: 210, color: '#ef4444', image: 'overstimulated.png' },
   { name: 'suprised', emoji: '😮', angle: 180, color: '#ff85a1', image: 'suprised.png' }, // Exact filename spelling matching "suprised.png"
-  { name: 'melting', emoji: '🫠', angle: 150, color: '#f59e0b', image: 'melting.png' },
+  { name: 'cry', emoji: '😭', angle: 150, color: '#0284c7', image: 'melting.png' },
   { name: 'having fun', emoji: '🥳', angle: 120, color: '#ff4d6d', image: 'having fun.png' }
 ];
 
@@ -30,7 +30,7 @@ const GIPHY_TAGS = {
   'excited': 'excited happy meme',
   'having fun': 'party fun meme',
   'overstimulated': 'overwhelmed chaos meme',
-  'melting': 'exhausted done meme',
+  'cry': 'crying sad meme',
   'suprised': 'shocked surprised meme'
 };
 
@@ -414,12 +414,14 @@ async function showMemeResult(index) {
   
   if (giphyApiKey) {
     try {
-      const url = `https://api.giphy.com/v1/gifs/random?api_key=${giphyApiKey}&tag=${encodeURIComponent(searchTag)}&rating=g`;
+      const url = `https://api.giphy.com/v1/gifs/search?api_key=${giphyApiKey}&q=${encodeURIComponent(searchTag)}&limit=30&rating=g`;
       const response = await fetch(url);
       if (response.ok) {
         const json = await response.json();
-        if (json && json.data && json.data.images) {
-          gifUrl = json.data.images.downsized?.url || json.data.images.original?.url || '';
+        if (json && json.data && json.data.length > 0) {
+          const randomIndex = Math.floor(Math.random() * json.data.length);
+          const selectedGif = json.data[randomIndex];
+          gifUrl = selectedGif.images.downsized?.url || selectedGif.images.original?.url || '';
         }
       } else {
         console.error('Giphy API error status:', response.status);
