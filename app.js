@@ -38,6 +38,20 @@ const GIPHY_TAGS = {
   'grateful': 'grateful happy reaction'
 };
 
+// Reddit Subreddit mapping for keyless fallback meme search (using meme-api.com)
+const MOOD_SUBREDDITS = {
+  'excited': 'dankmemes',
+  'grateful': 'wholesomememes',
+  'relaxed': 'me_irl',
+  'okay': 'memes',
+  'meh': 'me_irl',
+  'tired': 'me_irl',
+  'angry': 'dankmemes',
+  'sad': 'wholesomememes',
+  'anxious': 'me_irl',
+  'having fun': 'dankmemes'
+};
+
 // Premium Curated fallbacks mapping to 100% relevant and highly optimized reaction GIFs
 const CURATED_GIFS = {
   'sleepy': [
@@ -544,20 +558,40 @@ async function showMemeResult(index) {
     }
   }
   
-  // 4. Graceful local fallback using our set of local premium images if Giphy fails or API key is rate-limited
+  // 4. Secondary fallback: Attempt to fetch from free keyless Reddit Meme API if Giphy fails/rate-limited
+  if (!gifUrl) {
+    try {
+      const sub = MOOD_SUBREDDITS[mood.name] || 'memes';
+      console.log(`Giphy API rate-limited or unavailable. Trying keyless Reddit Meme API for r/${sub}...`);
+      const response = await fetch(`https://meme-api.com/gimme/${sub}/1`);
+      if (response.ok) {
+        const json = await response.json();
+        if (json && json.memes && json.memes.length > 0) {
+          gifUrl = json.memes[0].url || '';
+        }
+      }
+    } catch (e) {
+      console.error('Failed to fetch from keyless Reddit Meme API:', e);
+    }
+  }
+
+  // 5. Ultimate fallback: Use our set of local premium images if both Giphy and Reddit Meme API fail/offline
   if (!gifUrl) {
     gifUrl = `./memes/${mood.image}`;
     memeImage.alt = `Meme representing ${mood.name} mood (local fallback)`;
   } else {
-    memeImage.alt = `Giphy GIF representing ${mood.name} mood: ${searchTag}`;
-    // Ensure Giphy URL is fully converted to robust embeddable CORS-friendly i.giphy.com format
-    gifUrl = convertToEmbeddableGiphyUrl(gifUrl);
+    if (gifUrl.includes('giphy.com')) {
+      memeImage.alt = `Giphy GIF representing ${mood.name} mood: ${searchTag}`;
+      gifUrl = convertToEmbeddableGiphyUrl(gifUrl);
+    } else {
+      memeImage.alt = `Reddit meme representing ${mood.name} mood`;
+    }
   }
   
-  // 5. Load and animate image/GIF with robust CORS Blob pre-fetch to secure canvas capability
+  // 6. Load and animate image/GIF with robust CORS Blob pre-fetch to secure canvas capability
   let loadedSuccessfully = false;
   
-  if (gifUrl.includes('giphy.com')) {
+  if (gifUrl.includes('giphy.com') || gifUrl.includes('redd.it')) {
     try {
       const response = await fetch(gifUrl);
       if (response.ok) {
@@ -565,12 +599,12 @@ async function showMemeResult(index) {
         memeImage.src = URL.createObjectURL(blob);
         loadedSuccessfully = true;
       } else {
-        console.warn("Giphy fetch failed, falling back directly to local set images.");
+        console.warn("External meme fetch failed, falling back directly to local set images.");
         gifUrl = `./memes/${mood.image}`;
         memeImage.src = gifUrl;
       }
     } catch (e) {
-      console.error("Failed to pre-fetch Giphy image blob, falling back directly to local set images:", e);
+      console.error("Failed to pre-fetch external image blob, falling back directly to local set images:", e);
       gifUrl = `./memes/${mood.image}`;
       memeImage.src = gifUrl;
     }
@@ -586,9 +620,9 @@ async function showMemeResult(index) {
   
   memeImage.onerror = () => {
     memeSpinner.style.display = 'none';
-    // If the image rendering fails, and it was a Giphy URL, immediately load the local set image
-    if (gifUrl.includes('giphy.com')) {
-      console.warn("Giphy image failed loading on page, falling back to local image.");
+    // If the image rendering fails, and it was a Giphy or Reddit URL, immediately load the local set image
+    if (gifUrl.includes('giphy.com') || gifUrl.includes('redd.it')) {
+      console.warn("External image failed loading on page, falling back to local image.");
       gifUrl = `./memes/${mood.image}`;
       memeImage.src = gifUrl;
       memeImage.alt = `Meme representing ${mood.name} mood (local fallback)`;
