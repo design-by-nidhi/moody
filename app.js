@@ -524,8 +524,19 @@ async function showMemeResult(index) {
     memeImage.alt = `Giphy GIF representing ${mood.name} mood: ${searchTag}`;
   }
   
-  // 5. Load and animate image/GIF
-  memeImage.src = gifUrl;
+  // 5. Load and animate image/GIF with robust CORS Blob pre-fetch to secure canvas capability
+  try {
+    const response = await fetch(gifUrl);
+    if (response.ok) {
+      const blob = await response.blob();
+      memeImage.src = URL.createObjectURL(blob);
+    } else {
+      memeImage.src = gifUrl;
+    }
+  } catch (e) {
+    console.error("Failed to pre-fetch image blob due to CORS/network, using direct source:", e);
+    memeImage.src = gifUrl;
+  }
   
   memeImage.onload = () => {
     memeSpinner.style.display = 'none';
@@ -726,8 +737,150 @@ function highlightSlot(idx, active) {
 }
 
 /* ==========================================================================
-   6. ATTACH EVENTS
+   6. ATTACH EVENTS & CANVAS GENERATION
    ========================================================================== */
+
+// Generate a high-resolution Polaroid poster image matching the active view sentiment and design
+async function generateShareableImageBlob() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 800;
+  canvas.height = 1050;
+  const ctx = canvas.getContext('2d');
+
+  // 1. Soft radial premium background gradient matching the body theme
+  const grad = ctx.createRadialGradient(400, 525, 0, 400, 525, 700);
+  grad.addColorStop(0, '#ffffff');
+  grad.addColorStop(1, '#f5ecef');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 800, 1050);
+
+  // 2. Draw "I am feeling" text
+  ctx.fillStyle = '#381a20';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '400 32px "Outfit", system-ui, sans-serif';
+  ctx.fillText('I am feeling', 400, 95);
+
+  // 3. Draw Mood Name
+  const currentMood = resultMoodName.textContent;
+  const moodColor = resultMoodName.style.color || '#775666';
+  ctx.fillStyle = moodColor;
+  ctx.font = 'italic 800 84px "Playfair Display", Georgia, serif';
+  ctx.fillText(currentMood.charAt(0).toUpperCase() + currentMood.slice(1), 400, 175);
+
+  // 4. Draw Polaroid Card Background with soft drop shadow
+  const cardW = 540;
+  const cardH = 680;
+  const cardX = (800 - cardW) / 2; // 130
+  const cardY = 250;
+
+  ctx.save();
+  ctx.shadowColor = 'rgba(56, 26, 32, 0.12)';
+  ctx.shadowBlur = 40;
+  ctx.shadowOffsetY = 16;
+  ctx.fillStyle = '#fffdfb';
+  ctx.fillRect(cardX, cardY, cardW, cardH);
+  ctx.restore();
+
+  // Draw Polaroid Card Border
+  ctx.strokeStyle = 'rgba(56, 26, 32, 0.05)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(cardX, cardY, cardW, cardH);
+
+  // 5. Draw Washi Tape at top-left
+  ctx.save();
+  ctx.translate(cardX - 10, cardY + 5);
+  ctx.rotate(-12 * Math.PI / 180);
+  ctx.fillStyle = 'rgba(243, 168, 162, 0.75)';
+  ctx.fillRect(-65, -15, 130, 30);
+  ctx.restore();
+
+  // 6. Draw Meme Image (the loaded image/GIF)
+  const imgW = cardW - 60; // 480
+  const imgH = 480;
+  const imgX = cardX + 30; // 160
+  const imgY = cardY + 30; // 280
+
+  ctx.fillStyle = '#faf6f5';
+  ctx.fillRect(imgX, imgY, imgW, imgH);
+
+  if (memeImage && memeImage.src) {
+    try {
+      // Use clean contain matching the CSS!
+      const imgNaturalW = memeImage.naturalWidth || imgW;
+      const imgNaturalH = memeImage.naturalHeight || imgH;
+      const imgRatio = imgNaturalW / imgNaturalH;
+      let drawW = imgW;
+      let drawH = imgH;
+      let drawX = imgX;
+      let drawY = imgY;
+
+      if (imgRatio > 1) {
+        drawH = imgW / imgRatio;
+        drawY = imgY + (imgH - drawH) / 2;
+      } else {
+        drawW = imgH * imgRatio;
+        drawX = imgX + (imgW - drawW) / 2;
+      }
+
+      ctx.drawImage(memeImage, drawX, drawY, drawW, drawH);
+    } catch (e) {
+      console.error("Failed to render image to canvas:", e);
+    }
+  }
+
+  // Draw media container border
+  ctx.strokeStyle = 'rgba(56, 26, 32, 0.06)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(imgX, imgY, imgW, imgH);
+
+  // 7. Draw Heart Charm at bottom-right corner of image container
+  const heartX = imgX + imgW - 18;
+  const heartY = imgY + imgH - 18;
+  const heartSize = 56;
+
+  ctx.save();
+  ctx.shadowColor = 'rgba(56, 26, 32, 0.12)';
+  ctx.shadowBlur = 6;
+  ctx.shadowOffsetY = 3;
+  ctx.fillStyle = '#f48c96'; // Beautiful warm pink heart charm
+
+  ctx.translate(heartX, heartY);
+  const scale = heartSize / 24;
+  ctx.scale(scale, scale);
+  
+  ctx.beginPath();
+  ctx.moveTo(12 - 12, 21.35 - 12);
+  ctx.lineTo(10.55 - 12, 20.03 - 12);
+  ctx.bezierCurveTo(5.4 - 12, 15.36 - 12, 2 - 12, 12.28 - 12, 2 - 12, 8.5 - 12);
+  ctx.bezierCurveTo(2 - 12, 5.42 - 12, 4.42 - 12, 3 - 12, 7.5 - 12, 3 - 12);
+  ctx.bezierCurveTo(9.24 - 12, 3 - 12, 10.91 - 12, 3.81 - 12, 12 - 12, 5.09 - 12);
+  ctx.bezierCurveTo(13.09 - 12, 3.81 - 12, 14.76 - 12, 3 - 12, 16.5 - 12, 3 - 12);
+  ctx.bezierCurveTo(19.58 - 12, 3 - 12, 22 - 12, 5.42 - 12, 22 - 12, 8.5 - 12);
+  ctx.bezierCurveTo(22 - 12, 12.28 - 12, 18.6 - 12, 15.36 - 12, 13.45 - 12, 20.04 - 12);
+  ctx.lineTo(12 - 12, 21.35 - 12);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // 8. Draw Date and Mood Number in caption
+  const dateText = document.getElementById('current-date').textContent;
+  const moodNumberText = document.getElementById('caption-mood-number').textContent;
+
+  ctx.fillStyle = '#381a20';
+  ctx.font = '700 26px "Outfit", system-ui, sans-serif';
+  
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(dateText, cardX + 30, cardY + cardH - 50);
+
+  ctx.textAlign = 'right';
+  ctx.fillText(moodNumberText, cardX + cardW - 30, cardY + cardH - 50);
+
+  return new Promise((resolve) => {
+    canvas.toBlob(resolve, 'image/png');
+  });
+}
 
 function setupEventListeners() {
   // Redial resets and takes user back to dialing dial
@@ -735,24 +888,71 @@ function setupEventListeners() {
     navigateTo('dial');
   });
   
-  // Polaroid share action
-  btnShare.addEventListener('click', () => {
+  btnShare.addEventListener('click', async () => {
     const currentMood = resultMoodName.textContent;
-    
-    if (navigator.share) {
-      navigator.share({
+    showToast("Generating your vibe poster... 🎨");
+
+    try {
+      const blob = await generateShareableImageBlob();
+      const file = new File([blob], `my-mood-meme-${currentMood.toLowerCase().replace(/\s+/g, '-')}.png`, { type: 'image/png' });
+      
+      const shareData = {
+        files: [file],
         title: 'My Mood Meme',
-        text: `I dialed my mood as ${currentMood.toUpperCase()} on the Retro Telephone! Check out my meme!`,
-        url: window.location.href,
-      })
-      .then(() => showToast("Shared successfully! 🚀"))
-      .catch((error) => console.log('Error sharing:', error));
-    } else {
-      // Fallback: Copy to clipboard
-      const copyText = `I am feeling ${currentMood.toUpperCase()} right now! Dial your mood on: ${window.location.href}`;
-      navigator.clipboard.writeText(copyText)
-        .then(() => showToast("Link copied to clipboard! 📋"))
-        .catch(() => showToast("Failed to copy link."));
+        text: "If you were wondering how I'm doing..."
+      };
+
+      let sharedSuccessfully = false;
+      
+      // Attempt native file sharing if supported
+      try {
+        if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+          await navigator.share(shareData);
+          sharedSuccessfully = true;
+          showToast("Shared successfully! 🚀");
+        }
+      } catch (e) {
+        console.warn("Native sharing failed or dismissed:", e);
+        if (e.name === 'AbortError') {
+          // User closed/dismissed the share sheet; treat as handled
+          sharedSuccessfully = true;
+        }
+      }
+
+      // Fallback for desktop/unsupported browsers: copy actual PNG image & download it
+      if (!sharedSuccessfully) {
+        let copiedSuccessfully = false;
+        
+        // 1. Try to copy actual image to clipboard
+        try {
+          if (navigator.clipboard && window.ClipboardItem) {
+            const item = new ClipboardItem({ "image/png": blob });
+            await navigator.clipboard.write([item]);
+            copiedSuccessfully = true;
+            showToast("Image copied! Paste in any chat. 📋✨");
+          }
+        } catch (err) {
+          console.error("Direct image copy to clipboard failed:", err);
+        }
+
+        // 2. Automatically trigger PNG file download
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = `my-mood-meme-${currentMood.toLowerCase().replace(/\s+/g, '-')}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+
+        if (!copiedSuccessfully) {
+          showToast("Direct sharing unsupported. Poster downloaded! 📥");
+        }
+      }
+
+    } catch (error) {
+      console.error('Error generating or sharing vibe poster:', error);
+      showToast("Failed to render share card.");
     }
   });
 
