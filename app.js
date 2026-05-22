@@ -19,6 +19,21 @@ const MOODS = [
 // Physical Stop Angle (bottom right at ~5:30)
 const STOP_ANGLE = 75;
 
+// GIPHY API Configuration
+let giphyApiKey = "";
+const GIPHY_TAGS = {
+  'sleepy': 'sleepy tired meme',
+  'meh': 'meh bored meme',
+  'okay': 'okay fine meme',
+  'relaxed': 'relaxed chill meme',
+  'confident': 'confident cool meme',
+  'excited': 'excited happy meme',
+  'having fun': 'party fun meme',
+  'overstimulated': 'overwhelmed chaos meme',
+  'melting': 'exhausted done meme',
+  'suprised': 'shocked surprised meme'
+};
+
 // Sound Control States
 let soundsEnabled = true;
 let audioCtx = null;
@@ -60,8 +75,43 @@ const soundOnIcon = soundToggle.querySelector('.icon-on');
 const soundOffIcon = soundToggle.querySelector('.icon-off');
 const soundToggleText = soundToggle.querySelector('.sound-badge-text');
 
+// Load Giphy API Key from either local file or serverless function
+async function loadGiphyKey() {
+  // 1. Try Vercel Serverless Function proxy first
+  try {
+    const res = await fetch('/api/giphy-key');
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.key) {
+        giphyApiKey = data.key;
+        console.log("Loaded Giphy API key via serverless bridge.");
+        return;
+      }
+    }
+  } catch (e) {
+    // Silent ignore
+  }
+
+  // 2. Try fetching local .env.local file directly (for local dev)
+  try {
+    const res = await fetch('/.env.local');
+    if (res.ok) {
+      const text = await res.text();
+      const match = text.match(/NEXT_PUBLIC_GIPHY_KEY\s*=\s*([^\s#]+)/);
+      if (match && match[1]) {
+        giphyApiKey = match[1].replace(/['"]/g, "").trim();
+        console.log("Loaded Giphy API key via local environment config.");
+        return;
+      }
+    }
+  } catch (e) {
+    // Silent ignore
+  }
+}
+
 // Initialize Website
 document.addEventListener('DOMContentLoaded', () => {
+  loadGiphyKey();
   setupRotaryDialHoles();
   setupEventListeners();
   updatePolaroidDate();
@@ -326,8 +376,8 @@ function navigateTo(targetView) {
   }
 }
 
-// Show selection and load meme image
-function showMemeResult(index) {
+// Show selection and load meme image (dynamic Giphy fetch with local fallback)
+async function showMemeResult(index) {
   const mood = MOODS[index];
   
   // Transition to results screen
@@ -351,12 +401,42 @@ function showMemeResult(index) {
   resultCardGlow.style.background = mood.color;
   resultCardGlow.style.boxShadow = `0 10px 45px ${mood.color}60`;
   
-  // 2. Load meme image from local files safely with loading spinner
+  // 2. Clear old image and show loading spinner immediately
   memeImage.classList.remove('loaded');
   memeSpinner.style.display = 'block';
+  memeImage.src = '';
   
-  memeImage.src = `./memes/${mood.image}`;
-  memeImage.alt = `Meme representing ${mood.name} mood`;
+  // 3. Attempt to fetch dynamic Giphy GIF
+  let gifUrl = '';
+  const searchTag = GIPHY_TAGS[mood.name] || `${mood.name} meme`;
+  
+  if (giphyApiKey) {
+    try {
+      const url = `https://api.giphy.com/v1/gifs/random?api_key=${giphyApiKey}&tag=${encodeURIComponent(searchTag)}&rating=g`;
+      const response = await fetch(url);
+      if (response.ok) {
+        const json = await response.json();
+        if (json && json.data && json.data.images) {
+          gifUrl = json.data.images.downsized?.url || json.data.images.original?.url || '';
+        }
+      } else {
+        console.error('Giphy API error status:', response.status);
+      }
+    } catch (e) {
+      console.error('Failed to fetch from Giphy:', e);
+    }
+  }
+  
+  // 4. Graceful local fallback if Giphy fails or API key is not configured
+  if (!gifUrl) {
+    gifUrl = `./memes/${mood.image}`;
+    memeImage.alt = `Meme representing ${mood.name} mood`;
+  } else {
+    memeImage.alt = `Giphy GIF representing ${mood.name} mood: ${searchTag}`;
+  }
+  
+  // 5. Load and animate image/GIF
+  memeImage.src = gifUrl;
   
   memeImage.onload = () => {
     memeSpinner.style.display = 'none';
@@ -365,8 +445,14 @@ function showMemeResult(index) {
   
   memeImage.onerror = () => {
     memeSpinner.style.display = 'none';
-    // Fallback if local download files don't load or fail
-    showToast(`Failed loading meme for: ${mood.name}`);
+    // Double fallback to local files if dynamic GIF URL fails at image rendering
+    if (gifUrl !== `./memes/${mood.image}`) {
+      gifUrl = `./memes/${mood.image}`;
+      memeImage.src = gifUrl;
+      memeImage.alt = `Meme representing ${mood.name} mood`;
+    } else {
+      showToast(`Failed loading meme for: ${mood.name}`);
+    }
   };
 }
 
