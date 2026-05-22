@@ -152,68 +152,6 @@
     </svg>
     <span class="sound-badge-text">Sounds On</span>
   </div>
-
-  <!-- Giphy API Key Configuration Badge -->
-  <div class="giphy-control-badge" id="giphy-toggle" role="button" aria-label="Configure Giphy API Key"
-    tabindex="0">
-    <svg class="giphy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-      <circle cx="8.5" cy="8.5" r="1.5"></circle>
-      <polyline points="21 15 16 10 5 21"></polyline>
-    </svg>
-    <span class="giphy-badge-text">Giphy GIF Mode</span>
-    <span class="giphy-status-dot" id="giphy-status-dot"></span>
-  </div>
-
-  <!-- Premium Giphy Settings Modal Dialog -->
-  <div class="giphy-modal-overlay" id="giphy-modal" aria-hidden="true" style="display: none;">
-    <div class="giphy-modal-card" role="dialog" aria-modal="true" aria-labelledby="giphy-modal-title">
-      <button class="giphy-modal-close" id="btn-giphy-close" aria-label="Close settings">&times;</button>
-      
-      <div class="giphy-modal-header">
-        <h3 id="giphy-modal-title" class="giphy-modal-title">Giphy GIF Settings</h3>
-        <p class="giphy-modal-subtitle">Enable randomized Giphy memes on every dial interaction</p>
-      </div>
-
-      <div class="giphy-modal-body">
-        <p class="giphy-modal-description">
-          To retrieve live, varied, randomized GIFs for your moods, this application can pull directly from Giphy's API. Paste your Giphy API key below.
-        </p>
-        
-        <div class="giphy-key-instructions">
-          <span class="instructions-icon">🔑</span>
-          <p class="instructions-text">
-            Don't have a key? Get one for free in 2 minutes: <br>
-            <a href="https://developers.giphy.com" target="_blank" rel="noopener noreferrer" class="giphy-dev-link">Create an App on developers.giphy.com ↗</a>
-          </p>
-        </div>
-
-        <div class="input-group">
-          <label for="giphy-key-input" class="input-label">Giphy API Key</label>
-          <div class="input-wrapper">
-            <input type="password" id="giphy-key-input" class="giphy-key-input" placeholder="Paste your API key here (e.g. 8xX...)" autocomplete="off">
-            <button class="btn-toggle-visibility" id="btn-toggle-key-visibility" aria-label="Toggle API Key visibility">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="giphy-current-status">
-          <span class="status-label">Current API State:</span>
-          <span class="status-value status-offline" id="giphy-api-status-text">Using local offline backup images</span>
-        </div>
-      </div>
-
-      <div class="giphy-modal-footer">
-        <button id="btn-giphy-save" class="cta-button giphy-save-btn">Save Key & Enable GIFs</button>
-        <button id="btn-giphy-clear" class="secondary-button giphy-clear-btn">Use Local Offline Images</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Notification Toast -->
   <div id="toast" class="toast-notification" role="status" aria-live="polite"></div>
 

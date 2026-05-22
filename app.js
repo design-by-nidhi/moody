@@ -6,12 +6,12 @@
 const MOODS = [
   { name: 'excited', emoji: '🤩', angle: 30, color: '#e09f3e', image: 'excited.png' },
   { name: 'confident', emoji: '😎', angle: 0, color: '#2ec4b6', image: 'confident.png' },
-  { name: 'relaxed', emoji: '😊', angle: 330, color: '#b567ff', image: 'relaxed.png' },
+  { name: 'relaxed', emoji: '😌', angle: 330, color: '#b567ff', image: 'relaxed.png' },
   { name: 'okay', emoji: '🙂', angle: 300, color: '#52b788', image: 'okay.png' },
-  { name: 'meh', emoji: '😐', angle: 270, color: '#94a3b8', image: 'meh.png' },
+  { name: 'meh', emoji: '😑', angle: 270, color: '#94a3b8', image: 'meh.png' },
   { name: 'sleepy', emoji: '😴', angle: 240, color: '#00b4d8', image: 'sleepy.png' },
-  { name: 'overstimulated', emoji: '😒', angle: 210, color: '#ef4444', image: 'overstimulated.png' },
-  { name: 'suprised', emoji: '🤡', angle: 180, color: '#ff85a1', image: 'suprised.png' }, // Exact filename spelling matching "suprised.png"
+  { name: 'overstimulated', emoji: '😵‍💫', angle: 210, color: '#ef4444', image: 'overstimulated.png' },
+  { name: 'suprised', emoji: '😮', angle: 180, color: '#ff85a1', image: 'suprised.png' }, // Exact filename spelling matching "suprised.png"
   { name: 'melting', emoji: '🫠', angle: 150, color: '#f59e0b', image: 'melting.png' },
   { name: 'having fun', emoji: '🥳', angle: 120, color: '#ff4d6d', image: 'having fun.png' }
 ];
@@ -75,17 +75,8 @@ const soundOnIcon = soundToggle.querySelector('.icon-on');
 const soundOffIcon = soundToggle.querySelector('.icon-off');
 const soundToggleText = soundToggle.querySelector('.sound-badge-text');
 
-// Load Giphy API Key from either localStorage, serverless function, or local file
+// Load Giphy API Key from either serverless function or local file
 async function loadGiphyKey() {
-  // 0. Prioritize key in localStorage (manually configured by user in the UI)
-  const localKey = localStorage.getItem('GIPHY_API_KEY');
-  if (localKey && localKey.trim()) {
-    giphyApiKey = localKey.trim();
-    console.log("Loaded Giphy API key from localStorage.");
-    updateGiphyStatusUI(true);
-    return;
-  }
-
   // 1. Try Vercel Serverless Function proxy first
   try {
     const res = await fetch('/api/giphy-key');
@@ -94,7 +85,6 @@ async function loadGiphyKey() {
       if (data && data.key) {
         giphyApiKey = data.key;
         console.log("Loaded Giphy API key via serverless bridge.");
-        updateGiphyStatusUI(true);
         return;
       }
     }
@@ -111,7 +101,6 @@ async function loadGiphyKey() {
       if (match && match[1]) {
         giphyApiKey = match[1].replace(/['"]/g, "").trim();
         console.log("Loaded Giphy API key via local environment config.");
-        updateGiphyStatusUI(true);
         return;
       }
     }
@@ -119,35 +108,7 @@ async function loadGiphyKey() {
     // Silent ignore
   }
 
-  // 3. Fallback: No Giphy Key configured, use local offline images
   giphyApiKey = "";
-  updateGiphyStatusUI(false);
-}
-
-// Update the Giphy Indicator Badge and Modal status text
-function updateGiphyStatusUI(hasKey) {
-  const dot = document.getElementById('giphy-status-dot');
-  const modalText = document.getElementById('giphy-api-status-text');
-  
-  if (dot) {
-    dot.classList.remove('active', 'local');
-    if (hasKey) {
-      dot.classList.add('active');
-    } else {
-      dot.classList.add('local');
-    }
-  }
-  
-  if (modalText) {
-    modalText.classList.remove('status-active', 'status-offline');
-    if (hasKey) {
-      modalText.classList.add('status-active');
-      modalText.textContent = "Active — Random Giphy GIFs enabled";
-    } else {
-      modalText.classList.add('status-offline');
-      modalText.textContent = "Local Offline — Using fallback PNGs";
-    }
-  }
 }
 
 // Initialize Website
@@ -749,78 +710,6 @@ function setupEventListeners() {
       handleDragEnd();
     }
   });
-
-  // --- Giphy Modal Event Listeners ---
-  const giphyToggle = document.getElementById('giphy-toggle');
-  const giphyModal = document.getElementById('giphy-modal');
-  const btnGiphyClose = document.getElementById('btn-giphy-close');
-  const btnGiphySave = document.getElementById('btn-giphy-save');
-  const btnGiphyClear = document.getElementById('btn-giphy-clear');
-  const giphyKeyInput = document.getElementById('giphy-key-input');
-  const btnToggleKeyVisibility = document.getElementById('btn-toggle-key-visibility');
-
-  if (giphyToggle && giphyModal) {
-    // Open Modal
-    giphyToggle.addEventListener('click', () => {
-      giphyModal.style.display = 'flex';
-      giphyModal.setAttribute('aria-hidden', 'false');
-      // Set input value to whatever is stored currently
-      const currentStored = localStorage.getItem('GIPHY_API_KEY') || '';
-      giphyKeyInput.value = currentStored;
-    });
-
-    // Close Modal helper
-    const hideGiphyModal = () => {
-      giphyModal.style.display = 'none';
-      giphyModal.setAttribute('aria-hidden', 'true');
-    };
-
-    btnGiphyClose.addEventListener('click', hideGiphyModal);
-
-    // Close on clicking outside the card
-    giphyModal.addEventListener('click', (e) => {
-      if (e.target === giphyModal) {
-        hideGiphyModal();
-      }
-    });
-
-    // Close on Escape key
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && giphyModal.style.display === 'flex') {
-        hideGiphyModal();
-      }
-    });
-
-    // Save Key Action
-    btnGiphySave.addEventListener('click', () => {
-      const keyVal = giphyKeyInput.value.trim();
-      if (!keyVal) {
-        showToast("Please enter a valid Giphy API Key first!");
-        return;
-      }
-      localStorage.setItem('GIPHY_API_KEY', keyVal);
-      hideGiphyModal();
-      showToast("Giphy API Key saved! GIF Mode is ACTIVE! 🎬");
-      loadGiphyKey();
-    });
-
-    // Clear Key Action
-    btnGiphyClear.addEventListener('click', () => {
-      localStorage.removeItem('GIPHY_API_KEY');
-      giphyKeyInput.value = '';
-      hideGiphyModal();
-      showToast("Cleared API key. Reverted to local offline images! 📦");
-      loadGiphyKey();
-    });
-
-    // Toggle key password/text field visibility
-    if (btnToggleKeyVisibility) {
-      btnToggleKeyVisibility.addEventListener('click', () => {
-        const type = giphyKeyInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        giphyKeyInput.setAttribute('type', type);
-      });
-    }
-  }
 }
 
 // Toast helper
