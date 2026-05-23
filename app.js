@@ -167,8 +167,51 @@ const soundOnIcon = soundToggle.querySelector('.icon-on');
 const soundOffIcon = soundToggle.querySelector('.icon-off');
 const soundToggleText = soundToggle.querySelector('.sound-badge-text');
 
-// Local Meme Database Cache
+// Local Meme Database Cache & Prefetch Cache
 let cachedMemes = null;
+const prefetchedMemes = {};
+
+// Select a random highly-relevant GIF URL for a mood
+function getRandomMemeUrl(moodName) {
+  // Merge curated premium GIFs with the top most relevant harvested GIFs (first 40)
+  const curatedList = CURATED_GIFS[moodName] || [];
+  let harvestedList = [];
+  
+  if (cachedMemes && cachedMemes[moodName]) {
+    // Only take the top 40 harvested results to ensure extremely high relevancy
+    harvestedList = cachedMemes[moodName].slice(0, 40);
+  }
+  
+  const combinedList = [...curatedList, ...harvestedList];
+  
+  if (combinedList.length > 0) {
+    const randomIndex = Math.floor(Math.random() * combinedList.length);
+    return combinedList[randomIndex];
+  }
+  
+  // Ultimate local set PNG fallback
+  const mood = MOODS.find(m => m.name === moodName);
+  return `./memes/${mood ? mood.image : 'okay.png'}`;
+}
+
+// Prefetch a single GIF URL in the browser cache
+function prefetchGifUrl(moodName, url) {
+  if (!url) return;
+  
+  const img = new Image();
+  img.src = url;
+  
+  prefetchedMemes[moodName] = url;
+  console.log(`Prefetched next meme for "${moodName}":`, url);
+}
+
+// Prefetch one random highly-relevant GIF for all 10 moods
+function prefetchAllMoods() {
+  MOODS.forEach(mood => {
+    const url = getRandomMemeUrl(mood.name);
+    prefetchGifUrl(mood.name, url);
+  });
+}
 
 // Load local harvested memes.json database
 async function loadMemeDatabase() {
@@ -177,11 +220,16 @@ async function loadMemeDatabase() {
     if (response.ok) {
       cachedMemes = await response.json();
       console.log("Cached local meme database loaded successfully.");
+      
+      // Immediately prefetch one highly-relevant GIF for all 10 moods in the background
+      prefetchAllMoods();
     } else {
       console.error("Failed to load local meme database:", response.statusText);
+      prefetchAllMoods();
     }
   } catch (e) {
     console.error("Error loading local meme database:", e);
+    prefetchAllMoods();
   }
 }
 
@@ -523,7 +571,7 @@ function convertToEmbeddableGiphyUrl(url) {
   return url;
 }
 
-// Show selection and load meme image (using local harvested database)
+// Show selection and load meme image (using pre-fetched instant load)
 async function showMemeResult(index) {
   const mood = MOODS[index];
   
@@ -554,25 +602,13 @@ async function showMemeResult(index) {
   // Use a 1x1 transparent GIF to completely avoid broken image outlines/flicker
   memeImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
   
-  // 3. Select random GIF from local harvested database or premium curated fallbacks
-  let gifUrl = '';
-  
-  if (cachedMemes && cachedMemes[mood.name] && cachedMemes[mood.name].length > 0) {
-    const list = cachedMemes[mood.name];
-    const randomIndex = Math.floor(Math.random() * list.length);
-    gifUrl = list[randomIndex];
-    console.log(`Selected random harvested GIF for "${mood.name}":`, gifUrl);
-  } else if (CURATED_GIFS[mood.name] && CURATED_GIFS[mood.name].length > 0) {
-    // Curated fallback if memes.json fails to load/is uncached
-    const list = CURATED_GIFS[mood.name];
-    const randomIndex = Math.floor(Math.random() * list.length);
-    gifUrl = list[randomIndex];
-    console.log(`memes.json not loaded. Selected curated GIF for "${mood.name}":`, gifUrl);
-  } else {
-    // Ultimate local set PNG fallback
-    gifUrl = `./memes/${mood.image}`;
-    console.log(`Using ultimate local PNG fallback for "${mood.name}":`, gifUrl);
+  // 3. Retrieve the pre-fetched GIF URL (instant cache)
+  let gifUrl = prefetchedMemes[mood.name];
+  if (!gifUrl) {
+    gifUrl = getRandomMemeUrl(mood.name);
   }
+  
+  console.log(`Loading pre-fetched meme for "${mood.name}":`, gifUrl);
 
   // Set alt text
   if (gifUrl.includes('giphy.com')) {
@@ -607,6 +643,11 @@ async function showMemeResult(index) {
   memeImage.onload = () => {
     memeSpinner.style.display = 'none';
     memeImage.classList.add('loaded');
+    
+    // Immediately queue the NEXT random meme pre-fetch for this mood in the background
+    // so that if they select this mood again, it is already cached!
+    const nextUrl = getRandomMemeUrl(mood.name);
+    prefetchGifUrl(mood.name, nextUrl);
   };
   
   memeImage.onerror = () => {
@@ -620,6 +661,10 @@ async function showMemeResult(index) {
     } else {
       showToast(`Failed loading meme for: ${mood.name}`);
     }
+    
+    // Queue next prefetch anyway
+    const nextUrl = getRandomMemeUrl(mood.name);
+    prefetchGifUrl(mood.name, nextUrl);
   };
 }
 
